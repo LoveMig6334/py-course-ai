@@ -1,65 +1,64 @@
-import Image from "next/image";
+import { getAllLessons } from "@/lib/mdx";
+import { ArrowRight, BookOpen } from "lucide-react";
+import Link from "next/link";
 
-export default function Home() {
+export default async function HomePage() {
+  const lessons = await getAllLessons();
+
+  // Sort lessons by order or filename
+  const sortedLessons = lessons.sort((a, b) => {
+    if (a.frontmatter.order && b.frontmatter.order) {
+      return a.frontmatter.order - b.frontmatter.order;
+    }
+    return a.slug.localeCompare(b.slug);
+  });
+
   return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
+    <main className="home-container">
+      <section className="home-hero">
+        <div className="home-logo">🐍</div>
+        <h1 className="home-title">Python Course</h1>
+        <p className="home-subtitle">
+          เรียนรู้ภาษา Python ตั้งแต่พื้นฐาน
+          พร้อมตัวอย่างโค้ดที่รันได้จริงในเบราว์เซอร์
+        </p>
+      </section>
+
+      <section>
+        <h2 className="home-lessons-title">
+          <BookOpen size={24} />
+          บทเรียนทั้งหมด
+        </h2>
+
+        <div className="lessons-grid">
+          {sortedLessons.map((lesson, index) => (
+            <Link
+              key={lesson.slug}
+              href={`/course/${lesson.slug}`}
+              className="lesson-card"
             >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
+              <div className="lesson-card-number">{index + 1}</div>
+              <div className="lesson-card-content">
+                <div className="lesson-card-title">
+                  {lesson.frontmatter.title}
+                </div>
+                {lesson.frontmatter.description && (
+                  <div className="lesson-card-desc">
+                    {lesson.frontmatter.description}
+                  </div>
+                )}
+              </div>
+              <ArrowRight className="lesson-card-arrow" size={20} />
+            </Link>
+          ))}
+        </div>
+
+        {sortedLessons.length === 0 && (
+          <p style={{ color: "#94a3b8", textAlign: "center", padding: "3rem" }}>
+            ยังไม่มีบทเรียน กรุณาเพิ่มไฟล์ .mdx ในโฟลเดอร์ content/
           </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
-      </main>
-    </div>
+        )}
+      </section>
+    </main>
   );
 }
