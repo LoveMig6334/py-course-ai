@@ -26,7 +26,7 @@ export default function CourseList({ lessons }: { lessons: LessonData[] }) {
     <>
       <div className="flex flex-wrap gap-2 mb-10 border-b-2 border-gray-100">
         <button
-          className={`px-5 py-2.5 rounded-t-lg font-semibold text-[0.9375rem] transition-all duration-200 border-b-2 -mb-[2px] ${
+          className={`px-5 py-2.5 rounded-t-lg font-semibold text-[0.9375rem] transition-all duration-200 border-b-2 -mb-0.5 ${
             tab === "all"
               ? "text-blue-600 border-blue-600"
               : "text-gray-500 border-transparent hover:text-blue-600"
@@ -36,7 +36,7 @@ export default function CourseList({ lessons }: { lessons: LessonData[] }) {
           ทั้งหมด ({lessons.length})
         </button>
         <button
-          className={`px-5 py-2.5 rounded-t-lg font-semibold text-[0.9375rem] transition-all duration-200 border-b-2 -mb-[2px] ${
+          className={`px-5 py-2.5 rounded-t-lg font-semibold text-[0.9375rem] transition-all duration-200 border-b-2 -mb-0.5 ${
             tab === "basic"
               ? "text-blue-600 border-blue-600"
               : "text-gray-500 border-transparent hover:text-blue-600"
@@ -46,7 +46,7 @@ export default function CourseList({ lessons }: { lessons: LessonData[] }) {
           🔵 พื้นฐาน ({basicCount})
         </button>
         <button
-          className={`px-5 py-2.5 rounded-t-lg font-semibold text-[0.9375rem] transition-all duration-200 border-b-2 -mb-[2px] ${
+          className={`px-5 py-2.5 rounded-t-lg font-semibold text-[0.9375rem] transition-all duration-200 border-b-2 -mb-0.5 ${
             tab === "application"
               ? "text-blue-600 border-blue-600"
               : "text-gray-500 border-transparent hover:text-blue-600"

@@ -61,7 +61,7 @@ export default function CodeRunner({ initialCode = "" }: CodeRunnerProps) {
       </div>
 
       <textarea
-        className="w-full bg-transparent text-[#e6edf3] font-mono p-4 text-[0.875rem] leading-relaxed resize-y min-h-[150px] outline-none border-none placeholder-gray-600 focus:ring-1 focus:ring-blue-500/50 transition-all"
+        className="w-full bg-transparent text-[#e6edf3] font-mono p-4 text-[0.875rem] leading-relaxed resize-y min-h-37.5 outline-none border-none placeholder-gray-600 focus:ring-1 focus:ring-blue-500/50 transition-all"
         value={code}
         onChange={(e) => setCode(e.target.value)}
         placeholder="เขียนโค้ด Python ที่นี่..."

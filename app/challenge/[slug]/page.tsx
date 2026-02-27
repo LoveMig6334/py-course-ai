@@ -51,7 +51,7 @@ const components = {
   ),
   pre: (props: React.HTMLAttributes<HTMLPreElement>) => (
     <pre
-      className="!bg-transparent !p-0 overflow-x-auto mb-5 border border-[#30363d] rounded-xl"
+      className="bg-transparent! p-0! overflow-x-auto mb-5 border border-[#30363d] rounded-xl"
       {...props}
     />
   ),
@@ -105,7 +105,7 @@ export default async function ChallengeDetailPage({
   return (
     <div className="flex flex-col lg:flex-row h-[calc(100vh-64px)] w-full overflow-hidden bg-white">
       {/* Description Panel */}
-      <div className="w-full lg:w-1/3 xl:w-[450px] flex-shrink-0 h-1/2 lg:h-full overflow-y-auto border-b lg:border-b-0 lg:border-r border-gray-200 p-5 md:p-6 custom-scrollbar">
+      <div className="w-full lg:w-1/3 xl:w-112.5 shrink-0 h-1/2 lg:h-full overflow-y-auto border-b lg:border-b-0 lg:border-r border-gray-200 p-5 md:p-6 custom-scrollbar">
         {/* Breadcrumb */}
         <nav className="flex items-center gap-2 mb-5 text-[0.875rem] text-gray-400">
           <Link
@@ -153,7 +153,7 @@ export default async function ChallengeDetailPage({
             )}
         </div>
 
-        <div className="h-[1px] bg-gray-100 mb-5 w-full"></div>
+        <div className="h-px bg-gray-100 mb-5 w-full"></div>
 
         {/* MDX content */}
         <div className="prose prose-blue prose-sm text-[0.9375rem] text-gray-700 max-w-none prose-pre:bg-[#0d1117] prose-pre:text-[#e6edf3] prose-pre:border prose-pre:border-[#30363d] prose-pre:p-4 prose-pre:rounded-xl">
@@ -162,7 +162,7 @@ export default async function ChallengeDetailPage({
       </div>
 
       {/* IDE Panel */}
-      <div className="w-full lg:w-2/3 xl:flex-1 h-1/2 lg:h-full min-h-[400px]">
+      <div className="w-full lg:w-2/3 xl:flex-1 h-1/2 lg:h-full min-h-100">
         <IDE initialCode={starterCode} />
       </div>
     </div>

@@ -569,7 +569,7 @@ export default function IDE({
         : "text-green-600 font-medium";
 
   return (
-    <div className="flex flex-col flex-1 h-full min-h-[500px] w-full bg-[#1e1e1e] overflow-hidden">
+    <div className="flex flex-col flex-1 h-full min-h-125 w-full bg-[#1e1e1e] overflow-hidden">
       {/* Toolbar */}
       <div className="flex items-center justify-between px-4 h-12 bg-[#252526] border-b border-[#3c3c3c] text-[0.8125rem] text-[#cccccc]">
         <div className="flex items-center gap-3">
@@ -638,7 +638,7 @@ export default function IDE({
         {/* Editor */}
         <div className="flex-1 flex flex-col min-w-0 bg-[#1e1e1e]">
           <div className="flex bg-[#252526] h-9 overflow-x-auto no-scrollbar border-b border-[#3c3c3c]">
-            <button className="px-4 text-[0.8125rem] h-full flex items-center bg-[#1e1e1e] text-white border-t border-t-blue-500 whitespace-nowrap min-w-[120px]">
+            <button className="px-4 text-[0.8125rem] h-full flex items-center bg-[#1e1e1e] text-white border-t border-t-blue-500 whitespace-nowrap min-w-30">
               {basename(activeFile)}
             </button>
           </div>
@@ -657,7 +657,7 @@ export default function IDE({
       </div>
 
       {/* Bottom Panel */}
-      <div className="h-[35%] min-h-[150px] max-h-[60%] border-t border-[#3c3c3c] bg-[#1e1e1e] flex flex-col font-mono relative z-10 transition-all duration-300 shrink-0">
+      <div className="h-[35%] min-h-37.5 max-h-[60%] border-t border-[#3c3c3c] bg-[#1e1e1e] flex flex-col font-mono relative z-10 transition-all duration-300 shrink-0">
         <div className="flex bg-[#252526] border-b border-[#3c3c3c] h-8">
           <button
             className={`px-4 text-[0.675rem] font-bold uppercase tracking-wider h-full flex items-center border-b border-transparent transition-colors ${
@@ -713,7 +713,7 @@ export default function IDE({
               </span>
               <input
                 ref={terminalInputRef}
-                className="flex-1 bg-transparent border-none text-[#cccccc] font-mono outline-none min-w-[100px]"
+                className="flex-1 bg-transparent border-none text-[#cccccc] font-mono outline-none min-w-25"
                 value={terminalInput}
                 onChange={(e) => setTerminalInput(e.target.value)}
                 onKeyDown={handleTerminalKey}

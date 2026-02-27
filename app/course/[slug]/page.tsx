@@ -44,7 +44,7 @@ const components = {
   ),
   pre: (props: React.HTMLAttributes<HTMLPreElement>) => (
     <pre
-      className="bg-[#0d1117] p-5 rounded-xl overflow-x-auto mb-6 border border-[#30363d] !bg-transparent !p-0"
+      className="bg-transparent! p-0! rounded-xl overflow-x-auto mb-6 border border-[#30363d]"
       {...props}
     />
   ),
