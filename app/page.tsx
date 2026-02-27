@@ -1,6 +1,9 @@
-import Link from "next/link";
-import { getAllLessons } from "@/lib/mdx";
+import { Badge } from "@/components/ui/Badge";
+import { Button } from "@/components/ui/Button";
+import { FeatureCard } from "@/components/ui/Card";
 import { getAllChallenges } from "@/lib/challenges";
+import { getAllLessons } from "@/lib/mdx";
+import Link from "next/link";
 
 export default async function HomePage() {
   const [basicLessons, appLessons, challenges] = await Promise.all([
@@ -12,123 +15,154 @@ export default async function HomePage() {
   return (
     <>
       {/* Hero */}
-      <section className="hero-section">
-        <div className="hero-badge">🐍 Python Learning Platform</div>
-        <h1 className="hero-title">
-          เรียน <span className="hero-title-accent">Python</span>
+      <section className="px-6 py-20 md:py-32 w-full max-w-7xl mx-auto text-center flex flex-col items-center">
+        <div className="inline-flex items-center gap-2 bg-yellow-50 border border-yellow-400 text-gray-700 px-4 py-1.5 rounded-full text-sm font-semibold mb-6">
+          🐍 Python Learning Platform
+        </div>
+        <h1 className="text-4xl md:text-5xl lg:text-[4rem] font-bold leading-tight tracking-tight text-gray-900 mb-5">
+          เรียน{" "}
+          <span className="text-blue-600 relative inline-block">Python</span>
           <br />
           ที่นี่ที่เดียวครบ
         </h1>
-        <p className="hero-subtitle">
-          จากพื้นฐานการเขียนโค้ดไปจนถึงการนำ Python ไปใช้ในงานจริง
-          พร้อม IDE ในเบราว์เซอร์และโจทย์ฝึกทักษะ
+        <p className="text-lg md:text-xl text-gray-500 max-w-2xl mx-auto mb-10 leading-relaxed">
+          จากพื้นฐานการเขียนโค้ดไปจนถึงการนำ Python ไปใช้ในงานจริง พร้อม IDE
+          ในเบราว์เซอร์และโจทย์ฝึกทักษะ
         </p>
-        <div className="hero-cta">
-          <Link href="/course" className="btn-primary">
+        <div className="flex flex-wrap gap-4 justify-center">
+          <Button href="/course" variant="primary">
             เริ่มเรียนเลย →
-          </Link>
-          <Link href="/challenge" className="btn-secondary">
+          </Button>
+          <Button href="/challenge" variant="secondary">
             ดูโจทย์ฝึกหัด
-          </Link>
+          </Button>
         </div>
       </section>
 
       {/* Stats */}
-      <section
-        style={{
-          background: "var(--blue-light)",
-          borderTop: "1px solid var(--blue-mid)",
-          borderBottom: "1px solid var(--blue-mid)",
-          padding: "2rem 1.5rem",
-        }}
-      >
-        <div className="stats-grid" style={{ maxWidth: 900, margin: "0 auto" }}>
+      <section className="bg-blue-50 border-y border-blue-100 py-12 px-6">
+        <div className="grid grid-cols-3 gap-4 md:gap-8 max-w-4xl mx-auto text-center">
           <div>
-            <div className="stat-number">{basicLessons.length + appLessons.length}</div>
-            <div className="stat-label">บทเรียน</div>
+            <div className="text-3xl md:text-5xl font-bold text-blue-600 tracking-tight">
+              {basicLessons.length + appLessons.length}
+            </div>
+            <div className="text-sm md:text-base text-gray-500 mt-1 md:mt-2">
+              บทเรียน
+            </div>
           </div>
           <div>
-            <div className="stat-number">{challenges.length}</div>
-            <div className="stat-label">โจทย์ฝึกหัด</div>
+            <div className="text-3xl md:text-5xl font-bold text-blue-600 tracking-tight">
+              {challenges.length}
+            </div>
+            <div className="text-sm md:text-base text-gray-500 mt-1 md:mt-2">
+              โจทย์ฝึกหัด
+            </div>
           </div>
           <div>
-            <div className="stat-number">2</div>
-            <div className="stat-label">หมวดหมู่</div>
+            <div className="text-3xl md:text-5xl font-bold text-blue-600 tracking-tight">
+              2
+            </div>
+            <div className="text-sm md:text-base text-gray-500 mt-1 md:mt-2">
+              หมวดหมู่
+            </div>
           </div>
         </div>
       </section>
 
       {/* Features */}
-      <section className="features-section">
-        <div className="page-container">
-          <p className="section-label">ทำไมต้อง mixPie DEV</p>
-          <h2 className="section-title">เรียนรู้อย่างมีประสิทธิภาพ</h2>
-          <p className="section-subtitle">
+      <section className="py-20 px-6 bg-gray-50 border-y border-gray-100">
+        <div className="max-w-7xl mx-auto w-full">
+          <p className="text-sm font-semibold text-blue-600 uppercase tracking-widest mb-3">
+            ทำไมต้อง mixPie DEV
+          </p>
+          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 tracking-tight mb-4">
+            เรียนรู้อย่างมีประสิทธิภาพ
+          </h2>
+          <p className="text-[1.0625rem] text-gray-500 max-w-2xl leading-relaxed">
             ระบบที่ออกแบบมาเพื่อให้ผู้เรียนสามารถฝึกเขียนโค้ดได้ทันทีโดยไม่ต้องติดตั้งอะไรเพิ่ม
           </p>
-          <div className="features-grid">
-            <div className="feature-card">
-              <div className="feature-icon blue">💻</div>
-              <div className="feature-title">IDE ในเบราว์เซอร์</div>
-              <p className="feature-desc">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-12">
+            <FeatureCard>
+              <div className="w-12 h-12 bg-blue-50 text-blue-600 text-2xl rounded-xl flex items-center justify-center mb-5">
+                💻
+              </div>
+              <div className="text-[1.0625rem] font-bold text-gray-900 mb-2">
+                IDE ในเบราว์เซอร์
+              </div>
+              <p className="text-[0.9375rem] text-gray-500 leading-relaxed">
                 เขียนและรัน Python ได้ทันทีในเบราว์เซอร์ มีระบบไฟล์, Terminal
                 และรองรับ pip install ติดตั้ง library ได้เลย
               </p>
-            </div>
-            <div className="feature-card">
-              <div className="feature-icon yellow">📚</div>
-              <div className="feature-title">เนื้อหาครบถ้วน</div>
-              <p className="feature-desc">
-                บทเรียนแบ่งเป็น 2 หมวด: พื้นฐาน Python
-                และการประยุกต์ใช้งานจริง เช่น Data Analysis, Web Scraping
+            </FeatureCard>
+            <FeatureCard>
+              <div className="w-12 h-12 bg-yellow-50 text-yellow-600 text-2xl rounded-xl flex items-center justify-center mb-5">
+                📚
+              </div>
+              <div className="text-[1.0625rem] font-bold text-gray-900 mb-2">
+                เนื้อหาครบถ้วน
+              </div>
+              <p className="text-[0.9375rem] text-gray-500 leading-relaxed">
+                บทเรียนแบ่งเป็น 2 หมวด: พื้นฐาน Python และการประยุกต์ใช้งานจริง
+                เช่น Data Analysis, Web Scraping
               </p>
-            </div>
-            <div className="feature-card">
-              <div className="feature-icon green">🧩</div>
-              <div className="feature-title">โจทย์ฝึกหัด</div>
-              <p className="feature-desc">
+            </FeatureCard>
+            <FeatureCard>
+              <div className="w-12 h-12 bg-green-50 text-green-600 text-2xl rounded-xl flex items-center justify-center mb-5">
+                🧩
+              </div>
+              <div className="text-[1.0625rem] font-bold text-gray-900 mb-2">
+                โจทย์ฝึกหัด
+              </div>
+              <p className="text-[0.9375rem] text-gray-500 leading-relaxed">
                 โจทย์หลากหลายระดับความยาก ตั้งแต่ Easy ถึง Hard
                 ให้ฝึกคิดและแก้ปัญหาจริง พร้อม IDE ในหน้าเดียวกัน
               </p>
-            </div>
+            </FeatureCard>
           </div>
         </div>
       </section>
 
       {/* Course Preview */}
-      <section className="courses-preview-section">
-        <p className="section-label">เนื้อหา</p>
-        <h2 className="section-title">บทเรียนทั้งหมด</h2>
-        <div className="preview-grid">
+      <section className="py-20 px-6 max-w-7xl mx-auto w-full">
+        <p className="text-sm font-semibold text-blue-600 uppercase tracking-widest mb-3">
+          เนื้อหา
+        </p>
+        <h2 className="text-3xl md:text-4xl font-bold text-gray-900 tracking-tight mb-4">
+          บทเรียนทั้งหมด
+        </h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-10">
           {/* Basic */}
-          <div className="preview-category">
-            <div className="preview-category-header">
-              <span className="category-badge basic">🔵 พื้นฐาน</span>
-              <span style={{ fontSize: "0.875rem", color: "var(--gray-400)" }}>
+          <div className="bg-white border-[1.5px] border-gray-200 rounded-2xl overflow-hidden shadow-sm">
+            <div className="px-6 py-5 border-b border-gray-100 flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <Badge variant="basic">🔵 พื้นฐาน</Badge>
+              </div>
+              <span className="text-sm text-gray-500 font-medium">
                 {basicLessons.length} บทเรียน
               </span>
             </div>
-            <div className="preview-lessons-list">
+            <div className="p-3 flex flex-col gap-1">
               {basicLessons.slice(0, 5).map((lesson, i) => (
                 <Link
                   key={lesson.slug}
                   href={`/course/${lesson.slug}`}
-                  className="preview-lesson-item"
+                  className="flex items-center gap-4 p-3 rounded-[10px] no-underline text-gray-700 transition-all duration-200 hover:bg-blue-50 hover:text-blue-600 font-medium text-[0.9375rem]"
                 >
-                  <span className="preview-lesson-num">{i + 1}</span>
+                  <span className="w-8 h-8 flex items-center justify-center rounded-lg bg-gray-100 text-gray-600 font-bold text-sm shrink-0">
+                    {i + 1}
+                  </span>
                   {lesson.frontmatter.title}
                 </Link>
               ))}
               {basicLessons.length === 0 && (
-                <p style={{ padding: "1rem", color: "var(--gray-400)", fontSize: "0.875rem" }}>
+                <p className="p-4 text-sm text-gray-400">
                   ยังไม่มีบทเรียนพื้นฐาน
                 </p>
               )}
               {basicLessons.length > 5 && (
                 <Link
                   href="/course"
-                  className="preview-lesson-item"
-                  style={{ color: "var(--blue)", fontWeight: 600 }}
+                  className="flex items-center gap-4 p-3 mt-1 rounded-[10px] no-underline text-blue-600 transition-all duration-200 hover:bg-blue-50 font-semibold text-[0.9375rem]"
                 >
                   ดูทั้งหมด {basicLessons.length} บทเรียน →
                 </Link>
@@ -137,34 +171,37 @@ export default async function HomePage() {
           </div>
 
           {/* Application */}
-          <div className="preview-category">
-            <div className="preview-category-header">
-              <span className="category-badge application">🟡 การประยุกต์ใช้</span>
-              <span style={{ fontSize: "0.875rem", color: "var(--gray-400)" }}>
+          <div className="bg-white border-[1.5px] border-gray-200 rounded-2xl overflow-hidden shadow-sm">
+            <div className="px-6 py-5 border-b border-gray-100 flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <Badge variant="application">🟡 การประยุกต์ใช้</Badge>
+              </div>
+              <span className="text-sm text-gray-500 font-medium">
                 {appLessons.length} บทเรียน
               </span>
             </div>
-            <div className="preview-lessons-list">
+            <div className="p-3 flex flex-col gap-1">
               {appLessons.slice(0, 5).map((lesson, i) => (
                 <Link
                   key={lesson.slug}
                   href={`/course/${lesson.slug}`}
-                  className="preview-lesson-item"
+                  className="flex items-center gap-4 p-3 rounded-[10px] no-underline text-gray-700 transition-all duration-200 hover:bg-yellow-50 hover:text-yellow-700 font-medium text-[0.9375rem]"
                 >
-                  <span className="preview-lesson-num">{i + 1}</span>
+                  <span className="w-8 h-8 flex items-center justify-center rounded-lg bg-gray-100 text-gray-600 font-bold text-sm shrink-0">
+                    {i + 1}
+                  </span>
                   {lesson.frontmatter.title}
                 </Link>
               ))}
               {appLessons.length === 0 && (
-                <p style={{ padding: "1rem", color: "var(--gray-400)", fontSize: "0.875rem" }}>
+                <p className="p-4 text-sm text-gray-400">
                   ยังไม่มีบทเรียนการประยุกต์ใช้
                 </p>
               )}
               {appLessons.length > 5 && (
                 <Link
                   href="/course"
-                  className="preview-lesson-item"
-                  style={{ color: "var(--yellow-dark)", fontWeight: 600 }}
+                  className="flex items-center gap-4 p-3 mt-1 rounded-[10px] no-underline text-yellow-600 transition-all duration-200 hover:bg-yellow-50 font-semibold text-[0.9375rem]"
                 >
                   ดูทั้งหมด {appLessons.length} บทเรียน →
                 </Link>
@@ -175,12 +212,16 @@ export default async function HomePage() {
       </section>
 
       {/* CTA */}
-      <section className="cta-section">
-        <h2 className="cta-title">พร้อมเริ่มต้นแล้วหรือยัง?</h2>
-        <p className="cta-subtitle">เริ่มเรียน Python วันนี้ ไม่ต้องติดตั้งอะไรเลย</p>
-        <Link href="/course" className="btn-yellow">
+      <section className="py-24 px-6 max-w-4xl mx-auto text-center">
+        <h2 className="text-3xl md:text-4xl font-bold text-gray-900 tracking-tight mb-4">
+          พร้อมเริ่มต้นแล้วหรือยัง?
+        </h2>
+        <p className="text-lg text-gray-500 mb-10 leading-relaxed">
+          เริ่มเรียน Python วันนี้ ไม่ต้องติดตั้งอะไรเลย
+        </p>
+        <Button href="/course" variant="yellow">
           ไปหน้าคอร์สเรียน →
-        </Link>
+        </Button>
       </section>
     </>
   );
