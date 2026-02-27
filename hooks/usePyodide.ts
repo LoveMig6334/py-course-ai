@@ -8,7 +8,11 @@ interface PyodideInterface {
   loadPackage: (packages: string | string[]) => Promise<void>;
   FS: {
     mkdir: (path: string) => void;
-    writeFile: (path: string, data: string, opts?: { encoding: string }) => void;
+    writeFile: (
+      path: string,
+      data: string,
+      opts?: { encoding: string },
+    ) => void;
     readFile: (path: string, opts?: { encoding: string }) => string;
     readdir: (path: string) => string[];
     unlink: (path: string) => void;
@@ -63,19 +67,30 @@ export function usePyodide() {
         if (window._pyodideInstance) {
           pyodideRef.current = window._pyodideInstance;
           if (isMounted) {
-            setState({ pyodide: window._pyodideInstance, isLoading: false, isReady: true, error: null });
+            setState({
+              pyodide: window._pyodideInstance,
+              isLoading: false,
+              isReady: true,
+              error: null,
+            });
           }
           return;
         }
 
         const pyodide = await window.loadPyodide({
           indexURL: PYODIDE_CDN,
-          stdout: (text: string) => { outputRef.current.push(text); },
-          stderr: (text: string) => { errorRef.current.push(text); },
+          stdout: (text: string) => {
+            outputRef.current.push(text);
+          },
+          stderr: (text: string) => {
+            errorRef.current.push(text);
+          },
         });
 
         // Set up workspace directory
-        try { pyodide.FS.mkdir("/workspace"); } catch {}
+        try {
+          pyodide.FS.mkdir("/workspace");
+        } catch {}
 
         window._pyodideInstance = pyodide;
         pyodideRef.current = pyodide;
@@ -88,7 +103,10 @@ export function usePyodide() {
           setState((prev) => ({
             ...prev,
             isLoading: false,
-            error: err instanceof Error ? err.message : "Failed to initialize Pyodide",
+            error:
+              err instanceof Error
+                ? err.message
+                : "Failed to initialize Pyodide",
           }));
         }
       }
@@ -103,10 +121,16 @@ export function usePyodide() {
         const script = document.createElement("script");
         script.src = `${PYODIDE_CDN}pyodide.js`;
         script.async = true;
-        script.onload = () => { if (isMounted) initializePyodide(); };
+        script.onload = () => {
+          if (isMounted) initializePyodide();
+        };
         script.onerror = () => {
           if (isMounted) {
-            setState((prev) => ({ ...prev, isLoading: false, error: "Failed to load Pyodide script" }));
+            setState((prev) => ({
+              ...prev,
+              isLoading: false,
+              error: "Failed to load Pyodide script",
+            }));
           }
         };
         document.head.appendChild(script);
@@ -122,7 +146,9 @@ export function usePyodide() {
     };
 
     loadScript();
-    return () => { isMounted = false; };
+    return () => {
+      isMounted = false;
+    };
   }, []);
 
   const runPython = useCallback(async (code: string): Promise<RunResult> => {
@@ -186,16 +212,20 @@ print(f'Successfully installed ${packageName}')
 `);
         return {
           output: outputRef.current.join("\n"),
-          error: errorRef.current.length > 0 ? errorRef.current.join("\n") : null,
+          error:
+            errorRef.current.length > 0 ? errorRef.current.join("\n") : null,
         };
       } catch (err) {
         return {
           output: "",
-          error: err instanceof Error ? err.message : `ไม่สามารถติดตั้ง ${packageName}`,
+          error:
+            err instanceof Error
+              ? err.message
+              : `ไม่สามารถติดตั้ง ${packageName}`,
         };
       }
     },
-    []
+    [],
   );
 
   const writeFileToFS = useCallback((filePath: string, content: string) => {

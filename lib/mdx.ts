@@ -61,7 +61,7 @@ export function getAllLessonSlugs(): string[] {
 
 /** Get lesson by encoded slug */
 export async function getLessonBySlug(
-  slug: string
+  slug: string,
 ): Promise<LessonData | null> {
   const decoded = decodeSlug(slug);
   if (!decoded) return null;
@@ -69,7 +69,7 @@ export async function getLessonBySlug(
   const fullPath = path.join(
     contentDirectory,
     decoded.category,
-    `${decoded.lesson}.mdx`
+    `${decoded.lesson}.mdx`,
   );
   if (!fs.existsSync(fullPath)) return null;
 
@@ -88,7 +88,7 @@ export async function getLessonBySlug(
 
 /** Get all lessons, optionally filtered by category */
 export async function getAllLessons(
-  category?: Category
+  category?: Category,
 ): Promise<LessonData[]> {
   const slugs = getAllLessonSlugs().filter((s) => {
     if (!category) return true;

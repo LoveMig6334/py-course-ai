@@ -30,7 +30,7 @@ export function getAllChallengeSlugs(): string[] {
 }
 
 export async function getChallengeBySlug(
-  slug: string
+  slug: string,
 ): Promise<ChallengeData | null> {
   const fullPath = path.join(challengesDir, `${slug}.mdx`);
   if (!fs.existsSync(fullPath)) return null;
