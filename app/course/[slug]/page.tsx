@@ -5,6 +5,7 @@ import { getAllLessonSlugs, getLessonBySlug, LessonMeta } from "@/lib/mdx";
 import { compileMDX } from "next-mdx-remote/rsc";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import React from "react";
 
 const components = {
   CodeRunner,
@@ -42,12 +43,27 @@ const components = {
       {...props}
     />
   ),
-  pre: (props: React.HTMLAttributes<HTMLPreElement>) => (
-    <pre
-      className="bg-transparent! p-0! rounded-xl overflow-x-auto mb-6 border border-[#30363d]"
-      {...props}
-    />
-  ),
+  pre: (
+    props: React.HTMLAttributes<HTMLPreElement> & {
+      children?: React.ReactNode;
+    },
+  ) => {
+    if (React.isValidElement(props.children)) {
+      const childProps = props.children.props as {
+        className?: string;
+        children?: string;
+      };
+      if (childProps.className?.includes("language-mermaid")) {
+        return <Mermaid chart={childProps.children as string} />;
+      }
+    }
+    return (
+      <pre
+        className="bg-transparent! p-0! rounded-xl overflow-x-auto mb-6 border border-[#30363d]"
+        {...props}
+      />
+    );
+  },
 };
 
 export async function generateStaticParams() {
