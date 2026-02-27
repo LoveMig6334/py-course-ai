@@ -1,36 +1,100 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# mixPie DEV
+
+แพลตฟอร์มสอน Python ภาษาไทย ตั้งแต่พื้นฐานไปจนถึงการประยุกต์ใช้งานจริง พร้อม IDE ในเบราว์เซอร์และโจทย์ฝึกหัด
+
+## Features
+
+- **คอร์สเรียน** — บทเรียน MDX แบ่งเป็นหมวด _พื้นฐาน_ และ _การประยุกต์ใช้_ พร้อม inline code runner
+- **โจทย์ฝึกหัด** — โจทย์ระดับ Easy / Medium / Hard พร้อม IDE เต็มรูปแบบในหน้าเดียว
+- **In-browser IDE** — เขียนและรัน Python ในเบราว์เซอร์โดยไม่ต้องติดตั้งอะไร รองรับระบบไฟล์, Terminal และ `pip install`
+
+## Tech Stack
+
+| ส่วน | เทคโนโลยี |
+|------|-----------|
+| Framework | Next.js 16 (App Router, Turbopack) |
+| Language | TypeScript |
+| Styling | Tailwind CSS v4 + CSS custom properties |
+| Font | Kodchasan (Google Fonts) |
+| Python runtime | Pyodide 0.25.1 (WebAssembly) |
+| Content | MDX via next-mdx-remote + gray-matter |
+| Icons | lucide-react |
+| Diagrams | mermaid |
 
 ## Getting Started
 
-First, run the development server:
-
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000).
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```bash
+npm run build   # production build + TypeScript check
+npm run lint    # ESLint
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Adding Content
 
-## Learn More
+### บทเรียน
 
-To learn more about Next.js, take a look at the following resources:
+สร้างไฟล์ `.mdx` ใน `content/basic/` หรือ `content/application/`:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```mdx
+---
+title: "ชื่อบทเรียน"
+description: "คำอธิบายสั้น"
+category: "basic"        # หรือ "application"
+order: 1
+---
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+เนื้อหา...
 
-## Deploy on Vercel
+<CodeRunner code={`print("Hello!")`} />
+```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+### โจทย์ฝึกหัด
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+สร้างไฟล์ `.mdx` ใน `challenges/`:
+
+```mdx
+---
+title: "ชื่อโจทย์"
+description: "คำอธิบายสั้น"
+difficulty: "easy"       # easy | medium | hard
+order: 1
+starterCode: |
+  # โค้ดเริ่มต้นที่แสดงใน IDE
+---
+
+เนื้อหาโจทย์...
+```
+
+## Project Structure
+
+```
+app/
+  page.tsx                  # Landing page
+  course/
+    page.tsx                # Course listing (server)
+    CourseList.tsx          # Tab UI (client)
+    [slug]/page.tsx         # Lesson detail
+  challenge/
+    page.tsx                # Challenge listing
+    [slug]/page.tsx         # Challenge + IDE
+components/
+  NavBar.tsx
+  ide/IDE.tsx               # Full in-browser IDE
+  mdx/CodeRunner.tsx        # Inline code runner for lessons
+  mdx/Mermaid.tsx
+content/
+  basic/                    # Basic Python lessons
+  application/              # Applied Python lessons
+challenges/                 # Coding challenges
+lib/
+  mdx.ts                    # Course content loader
+  challenges.ts             # Challenge content loader
+hooks/
+  usePyodide.ts             # Pyodide singleton hook
+```
