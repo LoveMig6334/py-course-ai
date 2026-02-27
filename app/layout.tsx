@@ -1,21 +1,19 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Kodchasan } from "next/font/google";
+import NavBar from "@/components/NavBar";
 import "./globals.css";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
+const kodchasan = Kodchasan({
+  subsets: ["latin", "thai"],
+  weight: ["400", "500", "600", "700"],
+  variable: "--font-kodchasan",
+  display: "swap",
 });
 
 export const metadata: Metadata = {
-  title: "Python Course | เรียน Python ภาษาไทย",
+  title: "mixPie DEV — เรียน Python จากพื้นฐานสู่การประยุกต์ใช้",
   description:
-    "หลักสูตรเรียนรู้ภาษา Python ภาษาไทย พร้อมตัวอย่างโค้ดที่รันได้จริง",
+    "แพลตฟอร์มสอน Python ภาษาไทย ครบตั้งแต่พื้นฐานไปจนถึงการนำไปใช้จริง พร้อม IDE ในเบราว์เซอร์และโจทย์ฝึกหัด",
 };
 
 export default function RootLayout({
@@ -25,10 +23,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="th">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
-        {children}
+      <body className={kodchasan.variable}>
+        <NavBar />
+        <main>{children}</main>
       </body>
     </html>
   );
