@@ -2,7 +2,7 @@ export default function Loading() {
   return (
     <div className="flex flex-col lg:flex-row h-[calc(100vh-64px)] w-full overflow-hidden bg-white animate-pulse">
       {/* Description panel skeleton */}
-      <div className="w-full lg:w-1/3 xl:w-[450px] shrink-0 h-1/2 lg:h-full border-b lg:border-b-0 lg:border-r border-gray-100 p-5 md:p-6 flex flex-col gap-4">
+      <div className="w-full lg:w-1/3 xl:w-112.5 shrink-0 h-1/2 lg:h-full border-b lg:border-b-0 lg:border-r border-gray-100 p-5 md:p-6 flex flex-col gap-4">
         {/* Breadcrumb */}
         <div className="flex items-center gap-2 mb-1">
           <div className="h-4 w-12 bg-blue-100 rounded" />
