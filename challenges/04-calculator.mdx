@@ -1,0 +1,57 @@
+---
+title: "เครื่องคิดเลข"
+description: "สร้างเครื่องคิดเลขที่รองรับ +, -, ×, ÷ พร้อม error handling"
+difficulty: "medium"
+order: 4
+tags: ["function", "error-handling", "input"]
+starterCode: |
+  # เครื่องคิดเลข
+  def add(a, b): return a + b
+  def subtract(a, b): return a - b
+  def multiply(a, b): return a * b
+  def divide(a, b):
+      # จัดการกรณีหารด้วยศูนย์ที่นี่
+      pass
+
+  def calculate(a, operator, b):
+      """คำนวณตาม operator ที่กำหนด"""
+      # เขียนโค้ดที่นี่
+      pass
+
+  # ทดสอบ
+  tests = [
+      (10, "+", 5),
+      (10, "-", 3),
+      (6, "*", 7),
+      (20, "/", 4),
+      (10, "/", 0),   # กรณีพิเศษ
+  ]
+
+  for a, op, b in tests:
+      result = calculate(a, op, b)
+      print(f"{a} {op} {b} = {result}")
+---
+
+## โจทย์
+
+สร้างเครื่องคิดเลขที่:
+
+1. มีฟังก์ชัน `add`, `subtract`, `multiply`, `divide`
+2. ฟังก์ชัน `divide` ต้องจัดการกรณีหารด้วย 0 (return `"Error: หารด้วย 0 ไม่ได้"`)
+3. ฟังก์ชัน `calculate(a, operator, b)` เรียกใช้ฟังก์ชันที่เหมาะสม
+
+## ตัวอย่าง Output
+
+```
+10 + 5 = 15
+10 - 3 = 7
+6 * 7 = 42
+20 / 4 = 5.0
+10 / 0 = Error: หารด้วย 0 ไม่ได้
+```
+
+## Hints
+
+- ใช้ `if operator == "+"` สำหรับเลือกการคำนวณ
+- `try-except ZeroDivisionError` หรือตรวจสอบ `b == 0`
+- ฟังก์ชันสามารถ return string หรือตัวเลขได้

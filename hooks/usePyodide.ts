@@ -96,7 +96,7 @@ export function usePyodide() {
 
     const loadScript = async () => {
       try {
-        if (window.loadPyodide) {
+        if (typeof window.loadPyodide === "function") {
           await initializePyodide();
           return;
         }
