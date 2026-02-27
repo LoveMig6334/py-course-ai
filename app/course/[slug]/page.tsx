@@ -1,49 +1,44 @@
 import CodeRunner from "@/components/mdx/CodeRunner";
 import Mermaid from "@/components/mdx/Mermaid";
 import { getAllLessonSlugs, getLessonBySlug, LessonMeta } from "@/lib/mdx";
-import { ArrowLeft } from "lucide-react";
 import { compileMDX } from "next-mdx-remote/rsc";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
-// Custom MDX components
 const components = {
   CodeRunner,
   Mermaid,
-  // Override default elements for better styling
   h1: (props: React.HTMLAttributes<HTMLHeadingElement>) => (
-    <h1 className="lesson-h1" {...props} />
+    <h1 className="mdx-h1" {...props} />
   ),
   h2: (props: React.HTMLAttributes<HTMLHeadingElement>) => (
-    <h2 className="lesson-h2" {...props} />
+    <h2 className="mdx-h2" {...props} />
   ),
   h3: (props: React.HTMLAttributes<HTMLHeadingElement>) => (
-    <h3 className="lesson-h3" {...props} />
+    <h3 className="mdx-h3" {...props} />
   ),
   p: (props: React.HTMLAttributes<HTMLParagraphElement>) => (
-    <p className="lesson-p" {...props} />
+    <p className="mdx-p" {...props} />
   ),
   ul: (props: React.HTMLAttributes<HTMLUListElement>) => (
-    <ul className="lesson-ul" {...props} />
+    <ul className="mdx-ul" {...props} />
   ),
   ol: (props: React.HTMLAttributes<HTMLOListElement>) => (
-    <ol className="lesson-ol" {...props} />
+    <ol className="mdx-ol" {...props} />
   ),
   code: (props: React.HTMLAttributes<HTMLElement>) => (
-    <code className="lesson-code" {...props} />
+    <code className="mdx-code" {...props} />
   ),
   pre: (props: React.HTMLAttributes<HTMLPreElement>) => (
-    <pre className="lesson-pre" {...props} />
+    <pre className="mdx-pre" {...props} />
   ),
 };
 
-// Generate static params for all lessons
 export async function generateStaticParams() {
   const slugs = getAllLessonSlugs();
   return slugs.map((slug) => ({ slug }));
 }
 
-// Generate metadata for SEO
 export async function generateMetadata({
   params,
 }: {
@@ -51,16 +46,10 @@ export async function generateMetadata({
 }) {
   const { slug } = await params;
   const lesson = await getLessonBySlug(slug);
-
-  if (!lesson) {
-    return {
-      title: "บทเรียนไม่พบ",
-    };
-  }
-
+  if (!lesson) return { title: "บทเรียนไม่พบ" };
   return {
-    title: `${lesson.frontmatter.title} | Python Course`,
-    description: lesson.frontmatter.description || "เรียนรู้ Python ภาษาไทย",
+    title: `${lesson.frontmatter.title} | mixPie DEV`,
+    description: lesson.frontmatter.description ?? "เรียนรู้ Python ภาษาไทย",
   };
 }
 
@@ -71,41 +60,41 @@ export default async function LessonPage({
 }) {
   const { slug } = await params;
   const lesson = await getLessonBySlug(slug);
+  if (!lesson) notFound();
 
-  if (!lesson) {
-    notFound();
-  }
-
-  // Compile MDX with custom components
   const { content } = await compileMDX<LessonMeta>({
     source: lesson.source,
     components,
-    options: {
-      parseFrontmatter: false,
-    },
+    options: { parseFrontmatter: false },
   });
 
+  const categoryLabel =
+    lesson.frontmatter.category === "basic" ? "พื้นฐาน" : "การประยุกต์ใช้";
+  const categoryClass = lesson.frontmatter.category;
+
   return (
-    <main className="lesson-container">
-      <nav className="lesson-nav">
-        <Link href="/" className="lesson-back-link">
-          <ArrowLeft size={20} />
-          กลับหน้าหลัก
-        </Link>
+    <div className="lesson-page">
+      {/* Breadcrumb */}
+      <nav className="lesson-breadcrumb">
+        <Link href="/">หน้าหลัก</Link>
+        <span>/</span>
+        <Link href="/course">คอร์สเรียน</Link>
+        <span>/</span>
+        <span className={`category-badge ${categoryClass}`} style={{ fontSize: "0.75rem" }}>
+          {categoryLabel}
+        </span>
       </nav>
 
-      <article className="lesson-content">
-        <header className="lesson-header">
-          <h1 className="lesson-title">{lesson.frontmatter.title}</h1>
-          {lesson.frontmatter.description && (
-            <p className="lesson-description">
-              {lesson.frontmatter.description}
-            </p>
-          )}
-        </header>
+      {/* Header */}
+      <header className="lesson-header">
+        <h1 className="lesson-title">{lesson.frontmatter.title}</h1>
+        {lesson.frontmatter.description && (
+          <p className="lesson-description">{lesson.frontmatter.description}</p>
+        )}
+      </header>
 
-        <div className="lesson-body">{content}</div>
-      </article>
-    </main>
+      {/* Content */}
+      <article className="mdx-body">{content}</article>
+    </div>
   );
 }
