@@ -1,12 +1,5 @@
 import { getAllLessons } from "@/lib/mdx";
-import type { Metadata } from "next";
 import CourseList from "./CourseList";
-
-export const metadata: Metadata = {
-  title: "คอร์สเรียน Python",
-  description:
-    "เลือกบทเรียน Python ที่ต้องการ ครอบคลุมตั้งแต่พื้นฐานไปจนถึงการประยุกต์ใช้งานจริง เช่น Data Analysis และ Web Scraping",
-};
 
 export default async function CoursePage() {
   const lessons = await getAllLessons();
