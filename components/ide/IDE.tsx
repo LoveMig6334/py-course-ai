@@ -235,16 +235,19 @@ export default function IDE({
   };
 
   /* ─── Terminal: resolve path ─── */
-  const resolvePath = (p: string) => {
-    if (!p) return currentDir;
-    if (p.startsWith("/")) return p;
-    if (p === "..") {
-      const parts = currentDir.split("/").filter(Boolean);
-      parts.pop();
-      return "/" + parts.join("/") || "/workspace";
-    }
-    return joinPath(currentDir, p);
-  };
+  const resolvePath = useCallback(
+    (p: string) => {
+      if (!p) return currentDir;
+      if (p.startsWith("/")) return p;
+      if (p === "..") {
+        const parts = currentDir.split("/").filter(Boolean);
+        parts.pop();
+        return "/" + parts.join("/") || "/workspace";
+      }
+      return joinPath(currentDir, p);
+    },
+    [currentDir],
+  );
 
   /* ─── Terminal: execute command ─── */
   const execCommand = useCallback(
@@ -452,6 +455,7 @@ export default function IDE({
       runPython,
       installPackage,
       writeFileToFS,
+      resolvePath,
     ],
   );
 

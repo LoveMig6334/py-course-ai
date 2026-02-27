@@ -106,7 +106,10 @@ export default async function LessonPage({
           คอร์สเรียน
         </Link>
         <span>/</span>
-        <Badge variant={categoryClass as any} className="text-[0.75rem]">
+        <Badge
+          variant={categoryClass as "basic" | "application"}
+          className="text-[0.75rem]"
+        >
           {categoryLabel}
         </Badge>
       </nav>
