@@ -1,5 +1,12 @@
 import { getAllChallenges, type Difficulty } from "@/lib/challenges";
+import type { Metadata } from "next";
 import Link from "next/link";
+
+export const metadata: Metadata = {
+  title: "โจทย์ฝึกหัด Python",
+  description:
+    "ฝึกทักษะการเขียนโค้ด Python ด้วยโจทย์หลากหลายระดับ ตั้งแต่ Easy ถึง Hard พร้อม IDE ในหน้าเดียวกัน",
+};
 
 const difficultyLabel: Record<Difficulty, string> = {
   easy: "ง่าย",
