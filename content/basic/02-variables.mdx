@@ -1,0 +1,83 @@
+---
+title: "ตัวแปรและสตริง"
+description: "เรียนรู้การจัดการตัวแปรและข้อความใน Python อย่างละเอียด"
+category: "basic"
+order: 2
+---
+
+## ตัวแปร (Variables)
+
+ตัวแปรคือ "กล่อง" สำหรับเก็บข้อมูล ใน Python การตั้งชื่อตัวแปรต้องทำตามกฎ:
+
+- ขึ้นต้นด้วยตัวอักษรหรือ `_`
+- ใช้ตัวอักษร ตัวเลข และ `_` ได้
+- **ตัวพิมพ์เล็ก-ใหญ่ถือว่าต่างกัน** (`name` ≠ `Name`)
+
+<CodeRunner code={`# ตัวอย่างการตั้งชื่อตัวแปรที่ถูกต้อง
+student_name = "สมชาย"
+studentAge = 20       # camelCase
+_private = "ข้อมูลส่วนตัว"
+MAX_SIZE = 100        # ตัวแปรคงที่ใช้ตัวพิมพ์ใหญ่
+
+print(student_name, studentAge)`} />
+
+## สตริง (Strings)
+
+สตริงคือข้อความ สามารถสร้างได้หลายแบบ:
+
+<CodeRunner code={`# สตริงแบบต่างๆ
+s1 = 'ใช้ single quote'
+s2 = "ใช้ double quote"
+s3 = """ใช้ triple quote
+สำหรับข้อความหลายบรรทัด
+ได้เลย"""
+
+print(s1)
+print(s2)
+print(s3)`} />
+
+## f-string (การแทรกตัวแปรในสตริง)
+
+วิธีที่นิยมที่สุดใน Python สมัยใหม่:
+
+<CodeRunner code={`name = "ไพธอน"
+version = 3.12
+age = 34
+
+# f-string
+print(f"ภาษา {name} เวอร์ชัน {version}")
+print(f"Python อายุ {age} ปีแล้ว")
+
+# จัดรูปแบบตัวเลข
+pi = 3.14159265
+print(f"π ≈ {pi:.2f}")         # ทศนิยม 2 ตำแหน่ง
+print(f"π ≈ {pi:.4f}")         # ทศนิยม 4 ตำแหน่ง
+
+# จัดช่องว่าง
+score = 95
+print(f"คะแนน: {score:>5}")    # ชิดขวา
+print(f"คะแนน: {score:<5}!")`} />
+
+## เมธอดของสตริง
+
+Python มีฟังก์ชันสำเร็จรูปสำหรับจัดการสตริงมากมาย:
+
+<CodeRunner code={`text = "  Hello, Python World!  "
+
+print(text.strip())          # ลบช่องว่างหัวท้าย
+print(text.lower())          # ตัวพิมพ์เล็กทั้งหมด
+print(text.upper())          # ตัวพิมพ์ใหญ่ทั้งหมด
+print(text.replace("Python", "World"))  # แทนที่
+print(text.split(","))       # แบ่งสตริง
+
+# ตรวจสอบ
+print("Python" in text)     # True
+print(text.startswith("  Hello"))  # True
+print(len(text))             # ความยาว`} />
+
+## สรุป
+
+- ตัวแปรใน Python เป็น **dynamic typing** ไม่ต้องประกาศชนิด
+- สตริงสร้างด้วย `' '`, `" "`, หรือ `""" """`
+- **f-string** เป็นวิธีที่ดีที่สุดสำหรับแทรกตัวแปรในสตริง
+- มี method มากมายสำหรับจัดการสตริง

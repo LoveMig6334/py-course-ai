@@ -1,0 +1,70 @@
+---
+title: "เงื่อนไขและการตัดสินใจ"
+description: "เรียนรู้การใช้ if-elif-else และ logical operators ใน Python"
+category: "basic"
+order: 3
+---
+
+## คำสั่ง if-elif-else
+
+ช่วยให้โปรแกรมตัดสินใจได้:
+
+<CodeRunner code={`score = 75
+
+if score >= 80:
+    grade = "A"
+elif score >= 70:
+    grade = "B"
+elif score >= 60:
+    grade = "C"
+elif score >= 50:
+    grade = "D"
+else:
+    grade = "F"
+
+print(f"คะแนน {score} ได้เกรด {grade}")`} />
+
+## Logical Operators
+
+<CodeRunner code={`age = 22
+has_id = True
+is_vip = False
+
+# and — ทุกเงื่อนไขต้องเป็นจริง
+if age >= 18 and has_id:
+    print("เข้าได้")
+
+# or — อย่างน้อยหนึ่งเงื่อนไขต้องเป็นจริง
+if age >= 18 or is_vip:
+    print("มีสิทธิ์")
+
+# not — กลับค่า
+if not is_vip:
+    print("ไม่ใช่ VIP")`} />
+
+## Ternary Expression
+
+เขียนเงื่อนไขในบรรทัดเดียว:
+
+<CodeRunner code={`age = 20
+status = "ผู้ใหญ่" if age >= 18 else "เยาวชน"
+print(f"สถานะ: {status}")
+
+# ตัวอย่างใช้งานจริง
+temp = 35
+weather = "ร้อน 🔥" if temp > 30 else ("เย็น ❄️" if temp < 15 else "สบาย ✨")
+print(f"อุณหภูมิ {temp}°C: {weather}")`} />
+
+## Match Statement (Python 3.10+)
+
+คล้าย switch-case ในภาษาอื่น:
+
+<CodeRunner code={`day = "Monday"
+
+match day:
+    case "Monday" | "Tuesday" | "Wednesday" | "Thursday" | "Friday":
+        print(f"{day} — วันทำงาน")
+    case "Saturday" | "Sunday":
+        print(f"{day} — วันหยุด")
+    case _:
+        print("วันไม่ถูกต้อง")`} />
