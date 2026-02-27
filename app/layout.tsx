@@ -1,6 +1,6 @@
+import NavBar from "@/components/NavBar";
 import type { Metadata } from "next";
 import { Kodchasan } from "next/font/google";
-import NavBar from "@/components/NavBar";
 import "./globals.css";
 
 const kodchasan = Kodchasan({
@@ -23,7 +23,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="th">
-      <body className={kodchasan.variable}>
+      <body
+        className={`${kodchasan.variable} font-sans bg-white text-gray-900 antialiased min-h-screen flex flex-col`}
+      >
         <NavBar />
         <main>{children}</main>
       </body>
