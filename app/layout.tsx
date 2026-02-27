@@ -32,7 +32,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="th">
+    <html lang="th" data-scroll-behavior="smooth">
       <body
         className={`${kodchasan.variable} font-sans bg-white text-gray-900 antialiased min-h-screen flex flex-col`}
       >
