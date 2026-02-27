@@ -1,0 +1,96 @@
+---
+title: "Data Analysis ด้วย Python"
+description: "เรียนรู้การวิเคราะห์ข้อมูลด้วย Python เบื้องต้น"
+category: "application"
+order: 1
+---
+
+## Data Analysis คืออะไร?
+
+Data Analysis คือกระบวนการตรวจสอบ ทำความสะอาด และสรุปข้อมูล
+เพื่อค้นหาข้อมูลเชิงลึกที่มีประโยชน์
+
+Python เหมาะมากสำหรับงานนี้เพราะมี library ที่ทรงพลัง:
+- **statistics** — built-in สำหรับสถิติพื้นฐาน
+- **numpy** — การคำนวณตัวเลขขั้นสูง
+- **pandas** — จัดการข้อมูลตาราง
+
+## สถิติพื้นฐานด้วย Built-in
+
+<CodeRunner code={`import statistics
+
+# ข้อมูลคะแนนนักเรียน
+scores = [85, 92, 78, 95, 88, 76, 91, 83, 87, 90]
+
+print(f"จำนวนนักเรียน: {len(scores)}")
+print(f"คะแนนสูงสุด: {max(scores)}")
+print(f"คะแนนต่ำสุด: {min(scores)}")
+print(f"คะแนนเฉลี่ย: {statistics.mean(scores):.2f}")
+print(f"มัธยฐาน: {statistics.median(scores):.2f}")
+print(f"ส่วนเบี่ยงเบนมาตรฐาน: {statistics.stdev(scores):.2f}")`} />
+
+## การวิเคราะห์ข้อมูลยอดขาย
+
+<CodeRunner code={`# ข้อมูลยอดขายรายเดือน
+sales = {
+    "ม.ค.": 45000,
+    "ก.พ.": 52000,
+    "มี.ค.": 48000,
+    "เม.ย.": 61000,
+    "พ.ค.": 55000,
+    "มิ.ย.": 67000,
+}
+
+total = sum(sales.values())
+avg = total / len(sales)
+best_month = max(sales, key=sales.get)
+worst_month = min(sales, key=sales.get)
+
+print("=== รายงานยอดขาย ===")
+print(f"ยอดขายรวม: {total:,} บาท")
+print(f"ยอดขายเฉลี่ย/เดือน: {avg:,.0f} บาท")
+print(f"เดือนที่ขายดีที่สุด: {best_month} ({sales[best_month]:,} บาท)")
+print(f"เดือนที่ขายน้อยที่สุด: {worst_month} ({sales[worst_month]:,} บาท)")
+
+print("\n--- ยอดขายแต่ละเดือน ---")
+for month, amount in sales.items():
+    bar = "█" * (amount // 5000)
+    print(f"{month}: {bar} {amount:,}")`} />
+
+## การกรองและจัดกลุ่มข้อมูล
+
+<CodeRunner code={`students = [
+    {"name": "สมชาย", "score": 85, "department": "วิทย์"},
+    {"name": "สมหญิง", "score": 92, "department": "ศิลป์"},
+    {"name": "สมศรี", "score": 78, "department": "วิทย์"},
+    {"name": "สมใจ", "score": 95, "department": "ศิลป์"},
+    {"name": "สมาน", "score": 88, "department": "วิทย์"},
+]
+
+# กรองนักเรียนที่ได้ A (>= 90)
+top_students = [s for s in students if s["score"] >= 90]
+print("นักเรียนเกรด A:")
+for s in top_students:
+    print(f"  {s['name']}: {s['score']}")
+
+# จัดกลุ่มตามแผนก
+departments = {}
+for s in students:
+    dept = s["department"]
+    if dept not in departments:
+        departments[dept] = []
+    departments[dept].append(s["score"])
+
+print("\nคะแนนเฉลี่ยตามแผนก:")
+for dept, scores in departments.items():
+    avg = sum(scores) / len(scores)
+    print(f"  {dept}: {avg:.1f}")`} />
+
+## สรุป
+
+ในบทนี้คุณได้เรียนรู้:
+- การใช้ `statistics` module สำหรับสถิติพื้นฐาน
+- การวิเคราะห์และสรุปข้อมูล dict/list
+- การกรองและจัดกลุ่มข้อมูลด้วย List Comprehension
+
+บทต่อไปจะเรียน **numpy และ pandas** สำหรับการวิเคราะห์ข้อมูลขั้นสูง
