@@ -1,5 +1,6 @@
 "use client";
 
+import CodeEditor from "@/components/ide/CodeEditor";
 import { usePyodide } from "@/hooks/usePyodide";
 import { Loader2, Play } from "lucide-react";
 import { useState } from "react";
@@ -60,13 +61,11 @@ export default function CodeRunner({ initialCode = "" }: CodeRunnerProps) {
         )}
       </div>
 
-      <textarea
-        className="w-full bg-transparent text-[#e6edf3] font-mono p-4 text-[0.875rem] leading-relaxed resize-y min-h-37.5 outline-none border-none placeholder-gray-600 focus:ring-1 focus:ring-blue-500/50 transition-all"
+      <CodeEditor
         value={code}
-        onChange={(e) => setCode(e.target.value)}
-        placeholder="เขียนโค้ด Python ที่นี่..."
-        spellCheck={false}
-        disabled={isLoading}
+        onChange={setCode}
+        height="150px"
+        editable={!isLoading}
       />
 
       <div className="flex justify-end px-4 py-3 bg-[#161b22] border-t border-[#30363d]">

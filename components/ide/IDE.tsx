@@ -2,6 +2,7 @@
 
 import { usePyodide } from "@/hooks/usePyodide";
 import { useCallback, useEffect, useRef, useState } from "react";
+import CodeEditor from "./CodeEditor";
 
 /* ─── Types ─────────────────────────────────────────── */
 interface FileNode {
@@ -480,22 +481,6 @@ export default function IDE({
     }
   };
 
-  /* ─── Editor tab key ─── */
-  const handleEditorKey = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
-    if (e.key === "Tab") {
-      e.preventDefault();
-      const ta = e.currentTarget;
-      const start = ta.selectionStart;
-      const end = ta.selectionEnd;
-      const newContent =
-        editorContent.slice(0, start) + "    " + editorContent.slice(end);
-      setEditorContent(newContent);
-      setTimeout(() => {
-        ta.selectionStart = ta.selectionEnd = start + 4;
-      }, 0);
-    }
-  };
-
   /* ─── Render file tree ─── */
   const renderTree = (path: string, depth = 0): React.ReactNode => {
     const node = files[path];
@@ -642,15 +627,11 @@ export default function IDE({
               {basename(activeFile)}
             </button>
           </div>
-          <div className="flex-1 relative cursor-text">
-            <textarea
-              className="absolute inset-0 w-full h-full p-4 bg-transparent text-[#d4d4d4] font-mono text-[0.875rem] leading-relaxed resize-none outline-none whitespace-pre overflow-auto"
+          <div className="flex-1 overflow-hidden">
+            <CodeEditor
               value={editorContent}
-              onChange={(e) => setEditorContent(e.target.value)}
-              onKeyDown={handleEditorKey}
-              spellCheck={false}
-              autoCorrect="off"
-              autoCapitalize="off"
+              onChange={setEditorContent}
+              height="100%"
             />
           </div>
         </div>
