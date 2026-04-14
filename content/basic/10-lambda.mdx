@@ -1,0 +1,190 @@
+---
+title: "Lambda และ Higher-Order Functions"
+description: "เรียนรู้ Lambda functions, map(), filter(), sorted() กับ key และ Closures ใน Python"
+category: "basic"
+order: 10
+tags: ["lambda", "map", "filter", "sorted", "closure"]
+---
+
+## Lambda คืออะไร?
+
+Lambda คือ **ฟังก์ชันนิรนาม** (anonymous function) — เขียนได้ในบรรทัดเดียว ไม่ต้องตั้งชื่อ
+
+<CodeRunner code={`# ฟังก์ชันปกติ
+def add(a, b):
+    return a + b
+
+# lambda เทียบเท่า
+add_lambda = lambda a, b: a + b
+
+print(add(3, 5))
+print(add_lambda(3, 5))`} />
+
+### หลายตัวอย่าง Lambda
+
+<CodeRunner code={`# ยกกำลัง 2
+square = lambda x: x ** 2
+print(square(5))
+
+# ตรวจเลขคู่
+is_even = lambda x: x % 2 == 0
+print(is_even(4))
+print(is_even(7))
+
+# เลือกค่ามากกว่า
+bigger = lambda a, b: a if a > b else b
+print(bigger(10, 20))`} />
+
+## `map()` — ใช้ฟังก์ชันกับทุก element
+
+`map(function, iterable)` เรียกฟังก์ชันกับสมาชิกทุกตัวแล้วได้ผลลัพธ์ใหม่
+
+<CodeRunner code={`numbers = [1, 2, 3, 4, 5]
+
+# ยกกำลัง 2 ทุกตัว
+squared = list(map(lambda x: x ** 2, numbers))
+print("squared:", squared)
+
+# แปลงเป็น string
+str_numbers = list(map(str, numbers))
+print("strings:", str_numbers)
+
+# เปรียบเทียบกับ list comprehension (ผลเหมือนกัน)
+squared2 = [x ** 2 for x in numbers]
+print("comp:", squared2)`} />
+
+## `filter()` — กรอง element
+
+`filter(function, iterable)` เก็บเฉพาะสมาชิกที่ function return True
+
+<CodeRunner code={`numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+
+# กรองเฉพาะเลขคู่
+evens = list(filter(lambda x: x % 2 == 0, numbers))
+print("เลขคู่:", evens)
+
+# กรองเฉพาะคำที่ยาวกว่า 4 ตัวอักษร
+words = ["hello", "hi", "python", "ok", "world", "go"]
+long = list(filter(lambda w: len(w) > 3, words))
+print("คำยาว:", long)`} />
+
+## `sorted()` กับ `key=` — เรียงลำดับแบบกำหนดเอง
+
+<CodeRunner code={`# เรียง string ตามความยาว
+words = ["banana", "pie", "watermelon", "kiwi"]
+by_length = sorted(words, key=lambda w: len(w))
+print("ตามความยาว:", by_length)
+
+# เรียง dict ตาม value
+students = {"สมชาย": 85, "สมหญิง": 92, "สมศักดิ์": 78}
+by_score = sorted(students.items(), key=lambda x: x[1], reverse=True)
+print("ตามคะแนน:", by_score)
+
+# เรียง list of tuples
+data = [(1, "b"), (3, "a"), (2, "c")]
+by_second = sorted(data, key=lambda x: x[1])
+print("ตามตัวที่ 2:", by_second)`} />
+
+### `min()` / `max()` กับ `key=`
+
+<CodeRunner code={`words = ["banana", "pie", "watermelon", "kiwi"]
+shortest = min(words, key=len)
+longest = max(words, key=len)
+print(f"สั้นสุด: {shortest}")
+print(f"ยาวสุด: {longest}")
+
+# หา dict ที่มีค่ามากสุด
+scores = {"A": 85, "B": 92, "C": 78}
+best = max(scores, key=scores.get)
+print(f"คะแนนสูงสุด: {best} = {scores[best]}")`} />
+
+## Functions as First-Class Objects
+
+ใน Python ฟังก์ชันก็เป็น object — ส่งเป็น argument, เก็บในตัวแปร, ใส่ใน list ได้
+
+<CodeRunner code={`def shout(text):
+    return text.upper()
+
+def whisper(text):
+    return text.lower()
+
+# ส่งฟังก์ชันเป็น argument
+def apply(func, text):
+    return func(text)
+
+print(apply(shout, "hello"))
+print(apply(whisper, "HELLO"))
+
+# เก็บใน list
+transforms = [str.upper, str.lower, str.title]
+for func in transforms:
+    print(func("hello world"))`} />
+
+## Closures — ฟังก์ชันที่จำค่า
+
+Closure คือฟังก์ชันที่ "จำ" ค่าจาก scope ที่ครอบมันอยู่ แม้ว่า scope นั้นจะจบไปแล้ว
+
+<CodeRunner code={`def make_multiplier(factor):
+    def multiply(x):
+        return x * factor  # จำค่า factor ไว้
+    return multiply
+
+double = make_multiplier(2)
+triple = make_multiplier(3)
+
+print(double(5))   # 10
+print(triple(5))   # 15
+print(double(10))  # 20`} />
+
+### ตัวอย่างจริง — Counter
+
+<CodeRunner code={`def make_counter(start=0):
+    count = [start]  # ใช้ list เพราะ int เป็น immutable
+    def increment():
+        count[0] += 1
+        return count[0]
+    return increment
+
+counter = make_counter()
+print(counter())  # 1
+print(counter())  # 2
+print(counter())  # 3
+
+counter2 = make_counter(10)
+print(counter2())  # 11`} />
+
+## `reduce()` — ลดรูปเป็นค่าเดียว
+
+<CodeRunner code={`from functools import reduce
+
+numbers = [1, 2, 3, 4, 5]
+
+# หาผลรวม
+total = reduce(lambda a, b: a + b, numbers)
+print(f"ผลรวม: {total}")
+
+# หาผลคูณ
+product = reduce(lambda a, b: a * b, numbers)
+print(f"ผลคูณ: {product}")
+
+# ขั้นตอนการทำงาน:
+# 1*2=2 → 2*3=6 → 6*4=24 → 24*5=120`} />
+
+## เมื่อไหร่ใช้ Lambda vs ฟังก์ชันปกติ
+
+| ใช้ Lambda | ใช้ def |
+|---|---|
+| logic สั้นๆ บรรทัดเดียว | logic ซับซ้อน หลายบรรทัด |
+| ใช้ใน `map`, `filter`, `sorted` | ต้องเรียกใช้ซ้ำหลายที่ |
+| ไม่ต้องตั้งชื่อ | ต้องการชื่อที่อ่านง่าย |
+
+## สรุป
+
+- **Lambda**: `lambda args: expression` — ฟังก์ชันบรรทัดเดียว
+- **map()** — ใช้ฟังก์ชันกับทุก element
+- **filter()** — กรองเฉพาะที่ return True
+- **sorted(key=)** — เรียงลำดับแบบกำหนดเอง
+- **Closures** — ฟังก์ชันที่จำค่าจาก enclosing scope
+- **reduce()** — ลดรูป list เป็นค่าเดียว
+
+บทต่อไป: **Modules** — การ import และ Standard Library

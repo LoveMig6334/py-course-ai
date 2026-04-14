@@ -1,0 +1,225 @@
+---
+title: "โครงสร้างข้อมูล (Data Structure)"
+description: "เรียนรู้ List, Tuple, Dictionary และ Set — วิธีเก็บและจัดการข้อมูลหลายค่าใน Python"
+category: "basic"
+order: 7
+tags: ["list", "tuple", "dict", "set", "data-structure"]
+---
+
+## ทำไมต้อง Data Structure?
+
+ถ้าต้องเก็บชื่อนักเรียน 100 คน จะสร้างตัวแปร 100 ตัวก็ไม่ไหว — เราจึงต้องมีภาชนะที่เก็บข้อมูลได้มากกว่า 1 ค่า
+
+<CodeRunner code={`# แบบไม่ดี — สร้างตัวแปรหลายตัว
+name1 = "Tanakrit"
+name2 = "James"
+name3 = "Mikey"
+
+# แบบดี — ใช้ List
+names = ["Tanakrit", "James", "Mikey", "Teacher M"]
+print(names)`} />
+
+## List — ลิสต์
+
+![List Index](/images/lessons/data-structures/list-index-programiz.png)
+
+List คือภาชนะเก็บข้อมูลหลายค่า **เปลี่ยนแปลงได้** (mutable) เก็บข้อมูลต่างประเภทกันได้
+
+### สร้าง List และเรียกข้อมูล
+
+<CodeRunner code={`fruits = ["apple", "banana", "orange", "carrot", "pineapple"]
+
+print(fruits[0])     # ตัวแรก
+print(fruits[-1])    # ตัวสุดท้าย
+print(fruits[1:3])   # ตั้งแต่ index 1 ถึง 2
+print(fruits[:3])    # ตั้งแต่ต้นถึง index 2
+print(fruits[2:])    # ตั้งแต่ index 2 ถึงสุดท้าย
+print(len(fruits))   # จำนวนสมาชิก`} />
+
+![Negative Index](/images/lessons/data-structures/list-negative-index.png)
+
+### เพิ่ม/ลบข้อมูลใน List
+
+<CodeRunner code={`lst = ["apple", "banana", "cherry"]
+print("เริ่มต้น:", lst)
+
+lst.append("mango")       # เพิ่มท้าย
+print("append:", lst)
+
+lst.insert(1, "grape")    # แทรกที่ตำแหน่ง 1
+print("insert:", lst)
+
+lst.remove("banana")      # ลบตามชื่อ
+print("remove:", lst)
+
+popped = lst.pop(0)       # ลบตาม index (ได้ค่าคืน)
+print(f"pop: {popped}, เหลือ: {lst}")`} />
+
+### Functions ที่ใช้กับ List
+
+<CodeRunner code={`numbers = [3, 1, 4, 1, 5, 9, 2, 6]
+print("ก่อน sort:", numbers)
+
+numbers.sort()
+print("หลัง sort:", numbers)
+
+numbers.reverse()
+print("หลัง reverse:", numbers)
+
+print("count(1):", numbers.count(1))
+print("sum:", sum(numbers))
+print("min:", min(numbers))
+print("max:", max(numbers))`} />
+
+## Tuple — ทูเพิล
+
+Tuple คือ List ที่ **เปลี่ยนแปลงไม่ได้** (immutable) — สร้างแล้วแก้ไขไม่ได้
+
+<CodeRunner code={`my_tuple = ("apple", "banana", "cherry")
+print(my_tuple)
+print(my_tuple[0])
+print(type(my_tuple))
+
+# tuple ตัวเดียว ต้องมี comma
+single = ("apple",)
+print(type(single))
+
+not_tuple = ("apple")
+print(type(not_tuple))  # str ไม่ใช่ tuple!`} />
+
+### Unpacking — แกะค่าจาก Tuple
+
+<CodeRunner code={`fruits = ("apple", "banana", "cherry")
+green, yellow, red = fruits
+print(green, yellow, red)
+
+# ใช้ * เก็บค่าที่เหลือ
+fruits2 = ("apple", "banana", "cherry", "strawberry", "raspberry")
+first, second, *rest = fruits2
+print(f"first: {first}")
+print(f"second: {second}")
+print(f"rest: {rest}")
+print(f"rest type: {type(rest)}")  # list ไม่ใช่ tuple`} />
+
+## Dictionary — ดิกชันนารี
+
+![Dict Structure](/images/lessons/data-structures/dict-structure.webp)
+
+Dict เก็บข้อมูลแบบ **key-value** — ใช้ key อ้างอิงแทน index
+
+<CodeRunner code={`car = {
+    "brand": "Ford",
+    "model": "Mustang",
+    "year": 1964,
+}
+print(car)
+print(car["brand"])
+print(car["year"])`} />
+
+### CRUD operations
+
+<CodeRunner code={`car = {"brand": "Ford", "model": "Mustang", "year": 1964}
+
+# เปลี่ยนค่า
+car["year"] = 2020
+print("เปลี่ยน year:", car)
+
+# เพิ่ม key ใหม่
+car["color"] = "red"
+print("เพิ่ม color:", car)
+
+# ลบ key
+car.pop("model")
+print("ลบ model:", car)
+
+# ดู keys
+print("keys:", list(car.keys()))
+
+# loop ดูทั้งหมด
+for key, value in car.items():
+    print(f"  {key}: {value}")`} />
+
+## Set — เซ็ต
+
+Set เก็บข้อมูลเหมือน list แต่ **ไม่เก็บค่าซ้ำ** และ **ไม่มีลำดับ**
+
+![Set Operations](/images/lessons/data-structures/set-operations.png)
+
+<CodeRunner code={`my_set = {"apple", "banana", "cherry"}
+print(my_set)
+
+# เช็คว่ามีสมาชิกหรือไม่
+print("banana" in my_set)
+
+# เพิ่ม/ลบ
+my_set.add("orange")
+my_set.remove("banana")
+print(my_set)`} />
+
+### Union และ Intersection
+
+<CodeRunner code={`set1 = {"a", "b", "c"}
+set2 = {"b", "c", "d"}
+
+# union — รวมทั้งสองเซ็ต
+print("union:", set1.union(set2))
+
+# intersection — ค่าที่ซ้ำกัน
+print("intersection:", set1.intersection(set2))
+
+# difference — ค่าที่อยู่ใน set1 แต่ไม่อยู่ใน set2
+print("difference:", set1.difference(set2))`} />
+
+## เปรียบเทียบ Data Structures
+
+| | List | Tuple | Dict | Set |
+|---|---|---|---|---|
+| **สัญลักษณ์** | `[]` | `()` | `{k: v}` | `{}` |
+| **เปลี่ยนแปลงได้** | ✅ | ❌ | ✅ | ✅ |
+| **มีลำดับ** | ✅ | ✅ | ✅ (3.7+) | ❌ |
+| **ค่าซ้ำได้** | ✅ | ✅ | ❌ (key) | ❌ |
+| **เข้าถึงด้วย** | index | index | key | ❌ |
+
+## Copying Objects — การคัดลอกข้อมูล
+
+### ปัญหาของ Aliasing
+
+<CodeRunner code={`# ปัญหา: = ไม่ได้คัดลอก แต่ชี้ไปที่เดียวกัน!
+original = [1, 2, 3]
+alias = original
+alias.append(4)
+print(f"original: {original}")  # [1, 2, 3, 4] !!!
+print(f"alias: {alias}")`} />
+
+### วิธีคัดลอกที่ถูกต้อง
+
+<CodeRunner code={`import copy
+
+original = [1, 2, [3, 4]]
+
+# Shallow copy — คัดลอกชั้นแรก
+shallow = original.copy()
+shallow[0] = 99
+print(f"original: {original}")  # ไม่เปลี่ยน
+print(f"shallow: {shallow}")
+
+# แต่ shallow copy ยังแชร์ list ซ้อนอยู่
+shallow[2].append(5)
+print(f"original: {original}")  # [1, 2, [3, 4, 5]] เปลี่ยน!
+
+# Deep copy — คัดลอกทุกชั้น
+original2 = [1, 2, [3, 4]]
+deep = copy.deepcopy(original2)
+deep[2].append(5)
+print(f"\\noriginal2: {original2}")  # ไม่เปลี่ยน
+print(f"deep: {deep}")`} />
+
+## สรุป
+
+- **List** `[]` — เปลี่ยนได้, มีลำดับ, ใช้บ่อยที่สุด
+- **Tuple** `()` — เปลี่ยนไม่ได้, ใช้ส่งค่าเป็นชุด, unpack ด้วย `a, b, c = tuple`
+- **Dict** `{key: value}` — เข้าถึงด้วย key, CRUD ด้วย `[]`, `.pop()`, `.update()`
+- **Set** `{}` — ไม่ซ้ำ, ไม่มีลำดับ, ใช้ `union()` / `intersection()`
+- **ระวัง Aliasing**: ใช้ `.copy()` หรือ `copy.deepcopy()` เมื่อต้องการคัดลอกจริงๆ
+
+บทต่อไป: **Comprehensions** — สร้าง list/dict/set แบบกระชับในบรรทัดเดียว

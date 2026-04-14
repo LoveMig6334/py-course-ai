@@ -1,0 +1,174 @@
+---
+title: "คำสั่ง Print และ Strings"
+description: "เรียนรู้การแสดงผลด้วย print() การจัดการข้อความ f-string และเทคนิคการจัดรูปแบบ"
+category: "basic"
+order: 2
+tags: ["print", "string", "f-string", "beginner"]
+---
+
+## คำสั่ง `print()`
+
+`print()` เป็นคำสั่งสำหรับการแสดงผลค่าต่างๆ ในภาษา Python ไม่ว่าจะเป็นข้อความ ตัวแปร ตัวเลข หรือแม้แต่ค่าที่ได้จากฟังก์ชัน
+
+<CodeRunner code={`print("ข้อความอะไรก็ได้")`} />
+
+### แสดงผลหลายค่าด้วย `,`
+
+ถ้าเว้นข้อมูลด้วย `,` จะเป็นการเว้นวรรคโดยอัตโนมัติ
+
+<CodeRunner code={`print("ข้อความ 1", "ข้อความ 2")
+print("สวัสดี", "ชาว", "Python")`} />
+
+### เปลี่ยนตัวคั่นด้วย `sep`
+
+<CodeRunner code={`print("ข้อความ 1", "ข้อความ 2", sep="")
+print("2024", "01", "15", sep="-")
+print("A", "B", "C", sep=" -> ")`} />
+
+### แสดงผลตัวแปร
+
+<CodeRunner code={`a = 15
+b = 16
+print(a, b)
+print("ค่าของ a คือ", a)`} />
+
+## f-string — การแทรกตัวแปรในข้อความ
+
+ใน Python สมัยใหม่ เราใช้ `f-string` ภายใน `print()` เพื่อแทรกตัวแปรลงในข้อความ โดยใช้เครื่องหมายวงเล็บปีกกา `{}`
+
+<CodeRunner code={`age = 16
+name = "Ram"
+print(f"My name is {name} and I am {age} years old.")
+print(f"{name} is {age} years old. {age} is my favorite number.")`} />
+
+### จัดรูปแบบตัวเลขใน f-string
+
+<CodeRunner code={`pi = 3.14159265
+print(f"π ≈ {pi:.2f}")         # ทศนิยม 2 ตำแหน่ง
+print(f"π ≈ {pi:.4f}")         # ทศนิยม 4 ตำแหน่ง
+
+price = 1500000
+print(f"ราคา: {price:,} บาท")  # ใส่ comma คั่นหลักพัน
+
+score = 95
+print(f"คะแนน: {score:>10}")   # ชิดขวา 10 ตำแหน่ง
+print(f"คะแนน: {score:<10}!")  # ชิดซ้าย 10 ตำแหน่ง`} />
+
+## Modify Strings — การปรับแต่งสตริง
+
+Python มี method สำเร็จรูปสำหรับจัดการสตริง:
+
+### `upper()` และ `lower()`
+
+<CodeRunner code={`text = "hello world"
+print(text.upper())   # HELLO WORLD
+
+text2 = "HELLO WORLD"
+print(text2.lower())  # hello world`} />
+
+### `strip()` — ลบช่องว่าง
+
+<CodeRunner code={`text = "   Hello World   "
+print(text.strip())    # ลบทั้งหน้าและหลัง
+print(text.lstrip())   # ลบเฉพาะด้านซ้าย
+print(text.rstrip())   # ลบเฉพาะด้านขวา`} />
+
+### `replace()` — แทนที่ข้อความ
+
+<CodeRunner code={`text = "I like apples"
+result = text.replace("apples", "bananas")
+print(result)`} />
+
+### `split()` — แบ่งข้อความเป็น list
+
+<CodeRunner code={`text = "apple,banana,cherry"
+result = text.split(",")
+print(result)
+
+text2 = "Hello World Python"
+result2 = text2.split(" ")
+print(result2)`} />
+
+### `join()` — รวม list เป็นข้อความ (ตรงข้ามกับ split)
+
+<CodeRunner code={`fruits = ["apple", "banana", "cherry"]
+result = ", ".join(fruits)
+print(result)
+
+words = ["Hello", "World"]
+print(" ".join(words))
+print("-".join(["2024", "01", "15"]))`} />
+
+### `find()` และ `startswith()` / `endswith()`
+
+<CodeRunner code={`text = "Hello Python World"
+print(text.find("Python"))       # หาตำแหน่ง → 6
+print(text.find("Java"))         # หาไม่เจอ → -1
+print(text.startswith("Hello"))  # True
+print(text.endswith("World"))    # True`} />
+
+## การเว้นบรรทัดและ Escape Characters
+
+### `\n` — ขึ้นบรรทัดใหม่
+
+<CodeRunner code={`print("hello\\nstudent")
+print("บรรทัด 1\\nบรรทัด 2\\nบรรทัด 3")`} />
+
+### `end=""` — ไม่ขึ้นบรรทัดใหม่
+
+ปกติ `print()` จะขึ้นบรรทัดใหม่ทุกครั้ง แต่สามารถเปลี่ยนได้ด้วย `end=""`
+
+<CodeRunner code={`print("Hello", end="")
+print(" All of the students")
+
+# ลองใช้ end กับ loop
+for i in range(5):
+    print(i, end=" ")
+print()  # ขึ้นบรรทัดใหม่ตอนจบ`} />
+
+### Escape Characters อื่นๆ
+
+<CodeRunner code={`print("Tab:\\tHello")             # \\t = tab
+print("Backslash: \\\\")            # \\\\ = backslash
+print('He said \\'hello\\'')         # \\' = single quote
+print("She said \\"hi\\"")          # \\" = double quote`} />
+
+## Raw Strings และ Multiline Strings
+
+### Raw String `r"..."` — ไม่ตีความ escape characters
+
+ใช้เมื่อต้องการให้ข้อความเป็นตัวอักษรตรงๆ เช่น path ของไฟล์
+
+<CodeRunner code={`# ปกติ \\n จะขึ้นบรรทัดใหม่
+print("C:\\\\new_folder\\\\test")
+
+# ใส่ r ข้างหน้าเพื่อเป็น raw string
+print(r"C:\\new_folder\\test")`} />
+
+### Multiline String `"""..."""`
+
+<CodeRunner code={`message = """สวัสดีครับ
+นี่คือข้อความหลายบรรทัด
+เขียนได้เลยไม่ต้องใส่ \\n"""
+print(message)`} />
+
+## String Slicing — การตัดสตริง
+
+สตริงก็เป็น array เหมือน list ดังนั้นสามารถใช้การเรียกตำแหน่งได้
+
+<CodeRunner code={`text = "Hello man"
+print(text[0])      # H
+print(text[2])      # l
+print(text[-1])     # n (ตัวสุดท้าย)
+print(text[0:5])    # Hello
+print(text[::-1])   # nam olleH (กลับหลัง)`} />
+
+## สรุป
+
+- `print()` ใช้แสดงผล, ใส่ค่าหลายตัมด้วย `,`
+- `sep` เปลี่ยนตัวคั่น, `end` เปลี่ยนตัวจบ
+- **f-string** `f"ข้อความ {ตัวแปร}"` — วิธีที่ดีที่สุดในการแทรกตัวแปร
+- มี method มากมายสำหรับจัดการสตริง: `upper()`, `lower()`, `strip()`, `replace()`, `split()`, `join()`
+- `\n` = ขึ้นบรรทัดใหม่, `\t` = tab, `r"..."` = raw string
+
+บทต่อไป: **ตัวแปรและชนิดข้อมูล** — เจาะลึกการเก็บข้อมูลใน Python

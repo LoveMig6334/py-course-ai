@@ -1,0 +1,295 @@
+---
+title: "Class และ OOP"
+description: "เรียนรู้ Object-Oriented Programming: Class, Inheritance, Polymorphism, Dunder Methods และ Dataclass"
+category: "basic"
+order: 14
+tags: ["class", "oop", "inheritance", "polymorphism", "dataclass"]
+---
+
+## OOP คืออะไร?
+
+Object-Oriented Programming (OOP) คือแนวคิดในการเขียนโปรแกรมที่จำลองสิ่งต่างๆ ในโลกจริงเป็น **Object**
+
+- **Class** = พิมพ์เขียว (blueprint) ที่กำหนดว่า object มีอะไรบ้าง
+- **Object** = สิ่งที่สร้างจาก class (instance)
+
+## สร้าง Class
+
+<CodeRunner code={`class Dog:
+    def __init__(self, name, breed):
+        self.name = name      # instance attribute
+        self.breed = breed
+
+    def bark(self):
+        print(f"{self.name} พูดว่า: โฮ่งๆ!")
+
+    def info(self):
+        print(f"ชื่อ: {self.name}, สายพันธุ์: {self.breed}")
+
+# สร้าง object
+dog1 = Dog("บ๊อบบี้", "Golden Retriever")
+dog2 = Dog("มิกกี้", "Poodle")
+
+dog1.bark()
+dog2.bark()
+dog1.info()`} />
+
+## ตัวอย่าง — BankAccount
+
+<CodeRunner code={`class BankAccount:
+    def __init__(self, account_number, name, balance=0):
+        self.account_number = account_number
+        self.name = name
+        self.balance = balance
+
+    def deposit(self, amount):
+        self.balance += amount
+        print(f"ฝาก {amount} บาท | ยอดคงเหลือ: {self.balance} บาท")
+
+    def withdraw(self, amount):
+        if amount > self.balance:
+            print("ยอดเงินไม่เพียงพอ!")
+            return
+        self.balance -= amount
+        print(f"ถอน {amount} บาท | ยอดคงเหลือ: {self.balance} บาท")
+
+acc = BankAccount("1234567890", "สมชาย", 1000)
+acc.deposit(500)
+acc.withdraw(300)
+acc.withdraw(2000)`} />
+
+## Class vs Instance Attributes
+
+<CodeRunner code={`class Car:
+    wheels = 4  # class attribute — ใช้ร่วมกัน
+
+    def __init__(self, brand, color):
+        self.brand = brand    # instance attribute — เฉพาะตัว
+        self.color = color
+
+car1 = Car("Toyota", "แดง")
+car2 = Car("Honda", "น้ำเงิน")
+
+print(f"{car1.brand}: {car1.wheels} ล้อ, สี{car1.color}")
+print(f"{car2.brand}: {car2.wheels} ล้อ, สี{car2.color}")
+print(f"Car.wheels = {Car.wheels}")  # เข้าถึงผ่าน class ได้`} />
+
+## Dunder Methods — เมธอดพิเศษ
+
+Dunder (Double UNDERscore) methods ช่วยให้ object ทำงานกับ Python operators ได้
+
+<CodeRunner code={`class Point:
+    def __init__(self, x, y):
+        self.x = x
+        self.y = y
+
+    def __str__(self):
+        return f"Point({self.x}, {self.y})"
+
+    def __repr__(self):
+        return f"Point(x={self.x}, y={self.y})"
+
+    def __add__(self, other):
+        return Point(self.x + other.x, self.y + other.y)
+
+    def __eq__(self, other):
+        return self.x == other.x and self.y == other.y
+
+    def __len__(self):
+        return int((self.x**2 + self.y**2) ** 0.5)
+
+p1 = Point(3, 4)
+p2 = Point(1, 2)
+
+print(p1)           # __str__
+print(repr(p1))     # __repr__
+print(p1 + p2)      # __add__
+print(p1 == p2)     # __eq__
+print(len(p1))      # __len__`} />
+
+## Inheritance — การสืบทอด
+
+![Inheritance](/images/lessons/oop/inheritance-example.png)
+
+Child class สืบทอดทุกอย่างจาก Parent class แล้วเพิ่มหรือปรับแต่งได้
+
+<CodeRunner code={`class Animal:
+    def __init__(self, name):
+        self.name = name
+
+    def speak(self):
+        print(f"{self.name} ส่งเสียง...")
+
+class Dog(Animal):
+    def speak(self):  # override
+        print(f"{self.name}: โฮ่งๆ!")
+
+class Cat(Animal):
+    def speak(self):  # override
+        print(f"{self.name}: เมี้ยวๆ!")
+
+    def purr(self):   # method ใหม่
+        print(f"{self.name}: กรรๆ...")
+
+dog = Dog("บ๊อบบี้")
+cat = Cat("มิ้นท์")
+
+dog.speak()
+cat.speak()
+cat.purr()`} />
+
+### `super()` — เรียก method ของ parent
+
+<CodeRunner code={`class Animal:
+    def __init__(self, name, sound):
+        self.name = name
+        self.sound = sound
+
+class Pet(Animal):
+    def __init__(self, name, sound, owner):
+        super().__init__(name, sound)  # เรียก __init__ ของ parent
+        self.owner = owner
+
+    def info(self):
+        print(f"{self.name} ({self.sound}) - เจ้าของ: {self.owner}")
+
+pet = Pet("บ๊อบบี้", "โฮ่งๆ", "สมชาย")
+pet.info()`} />
+
+### Multiple Inheritance
+
+![Multiple Inheritance](/images/lessons/oop/multiple-inheritance.png)
+
+<CodeRunner code={`class Flyable:
+    def fly(self):
+        print(f"{self.name} กำลังบิน!")
+
+class Swimmable:
+    def swim(self):
+        print(f"{self.name} กำลังว่ายน้ำ!")
+
+class Duck(Animal, Flyable, Swimmable):
+    def speak(self):
+        print(f"{self.name}: ก๊าบๆ!")
+
+duck = Duck("โดนัลด์")
+duck.speak()
+duck.fly()
+duck.swim()`} />
+
+## Encapsulation — การซ่อนข้อมูล
+
+<CodeRunner code={`class Person:
+    def __init__(self, name, age):
+        self.name = name        # public
+        self._email = ""        # protected (convention)
+        self.__age = age        # private (name mangling)
+
+    def get_age(self):
+        return self.__age
+
+    def set_age(self, age):
+        if age < 0:
+            raise ValueError("อายุต้องไม่ติดลบ")
+        self.__age = age
+
+p = Person("สมชาย", 25)
+print(p.name)           # OK
+print(p.get_age())      # OK — ผ่าน method
+
+p.set_age(30)
+print(p.get_age())
+
+try:
+    p.set_age(-5)
+except ValueError as e:
+    print(f"Error: {e}")`} />
+
+## Polymorphism — Duck Typing
+
+ใน Python ไม่สนใจ type — สนใจแค่ว่ามี method ที่ต้องการหรือไม่
+
+<CodeRunner code={`class Dog:
+    def speak(self):
+        return "โฮ่งๆ"
+
+class Cat:
+    def speak(self):
+        return "เมี้ยวๆ"
+
+class Duck:
+    def speak(self):
+        return "ก๊าบๆ"
+
+# ไม่สนว่าเป็น class อะไร ขอแค่มี speak()
+animals = [Dog(), Cat(), Duck()]
+for animal in animals:
+    print(type(animal).__name__, ":", animal.speak())`} />
+
+## `isinstance()` / `issubclass()`
+
+<CodeRunner code={`print(isinstance(dog, Dog))       # True
+print(isinstance(dog, Animal))    # True (สืบทอดมา)
+print(isinstance(cat, Dog))       # False
+
+print(issubclass(Dog, Animal))    # True
+print(issubclass(Cat, Dog))       # False`} />
+
+## `@dataclass` — สร้าง Class แบบง่าย (Python 3.7+)
+
+ลดโค้ด boilerplate ไม่ต้องเขียน `__init__`, `__repr__`, `__eq__` เอง
+
+<CodeRunner code={`from dataclasses import dataclass
+
+@dataclass
+class Student:
+    name: str
+    age: int
+    gpa: float = 0.0  # ค่า default
+
+s1 = Student("สมชาย", 20, 3.5)
+s2 = Student("สมหญิง", 21)
+s3 = Student("สมชาย", 20, 3.5)
+
+print(s1)              # __repr__ อัตโนมัติ
+print(s2)
+print(s1 == s3)        # __eq__ อัตโนมัติ
+print(s1 == s2)`} />
+
+### เปรียบเทียบกับ class ปกติ
+
+<CodeRunner code={`# แบบปกติ — ต้องเขียนเยอะ
+class StudentOld:
+    def __init__(self, name, age, gpa=0.0):
+        self.name = name
+        self.age = age
+        self.gpa = gpa
+
+    def __repr__(self):
+        return f"StudentOld(name='{self.name}', age={self.age}, gpa={self.gpa})"
+
+    def __eq__(self, other):
+        return (self.name == other.name and
+                self.age == other.age and
+                self.gpa == other.gpa)
+
+# แบบ dataclass — 4 บรรทัดจบ!
+# @dataclass
+# class Student:
+#     name: str
+#     age: int
+#     gpa: float = 0.0
+
+print("dataclass ช่วยลดโค้ดได้มาก!")`} />
+
+## สรุป
+
+- **Class** = พิมพ์เขียว, **Object** = สิ่งที่สร้างจาก class
+- **`__init__`** = constructor, **`self`** = ตัว object เอง
+- **Dunder methods**: `__str__`, `__repr__`, `__add__`, `__eq__`, `__len__`
+- **Inheritance**: `class Child(Parent):` + `super()` เรียก parent
+- **Encapsulation**: `_protected`, `__private` (name mangling)
+- **Polymorphism**: Duck typing — สนใจ method ไม่สนใจ type
+- **`@dataclass`** — สร้าง class แบบง่ายลดโค้ด boilerplate
+
+บทต่อไป: **Decorators** — เพิ่มความสามารถให้ฟังก์ชันและ class

@@ -1,0 +1,257 @@
+---
+title: "Decorators, Iterators และ Generators"
+description: "เรียนรู้ Decorator pattern, Built-in decorators, Iterator protocol และ Generator functions ใน Python"
+category: "basic"
+order: 15
+tags: ["decorator", "iterator", "generator", "yield"]
+---
+
+## Decorator คืออะไร?
+
+Decorator คือฟังก์ชันที่ "ห่อหุ้ม" (wrap) ฟังก์ชันอื่น เพื่อเพิ่มความสามารถโดยไม่แก้โค้ดเดิม
+
+<CodeRunner code={`import time
+
+# สร้าง decorator วัดเวลา
+def timer(func):
+    def wrapper(*args, **kwargs):
+        start = time.time()
+        result = func(*args, **kwargs)
+        end = time.time()
+        print(f"{func.__name__} ใช้เวลา {end - start:.4f} วินาที")
+        return result
+    return wrapper
+
+@timer
+def slow_function():
+    total = sum(range(1000000))
+    return total
+
+result = slow_function()
+print(f"ผลลัพธ์: {result}")`} />
+
+### ไม่ใช้ `@` ก็ได้ — แค่เรียกฟังก์ชันซ้อนกัน
+
+<CodeRunner code={`def timer(func):
+    def wrapper(*args, **kwargs):
+        start = time.time()
+        result = func(*args, **kwargs)
+        print(f"เวลา: {time.time() - start:.4f}s")
+        return result
+    return wrapper
+
+def my_func():
+    return sum(range(100000))
+
+# สองวิธีนี้เหมือนกันทุกประการ:
+# วิธี 1: @timer ข้างบน def
+# วิธี 2: เรียกแบบนี้
+timed_func = timer(my_func)
+timed_func()`} />
+
+### `functools.wraps` — รักษาชื่อฟังก์ชันเดิม
+
+<CodeRunner code={`import functools
+
+def my_decorator(func):
+    @functools.wraps(func)  # สำคัญ! รักษา metadata
+    def wrapper(*args, **kwargs):
+        print("before")
+        result = func(*args, **kwargs)
+        print("after")
+        return result
+    return wrapper
+
+@my_decorator
+def greet(name):
+    """ทักทายผู้ใช้"""
+    print(f"สวัสดี {name}!")
+
+greet("สมชาย")
+print(f"ชื่อฟังก์ชัน: {greet.__name__}")
+print(f"docstring: {greet.__doc__}")`} />
+
+## Built-in Decorators
+
+### `@lru_cache` — เก็บผลลัพธ์ไว้ใช้ซ้ำ
+
+<CodeRunner code={`from functools import lru_cache
+
+@lru_cache(maxsize=100)
+def fibonacci(n):
+    if n < 2:
+        return n
+    return fibonacci(n - 1) + fibonacci(n - 2)
+
+# ไม่มี cache จะช้ามาก แต่มี cache เร็วทันที
+for i in range(20):
+    print(f"F({i}) = {fibonacci(i)}", end="  ")
+    if (i + 1) % 5 == 0:
+        print()
+
+print(f"\\ncache info: {fibonacci.cache_info()}")`} />
+
+### `@staticmethod` — ไม่ต้องใช้ self
+
+<CodeRunner code={`class MathUtils:
+    @staticmethod
+    def add(a, b):
+        return a + b
+
+    @staticmethod
+    def multiply(a, b):
+        return a * b
+
+# เรียกได้เลยไม่ต้องสร้าง object
+print(MathUtils.add(3, 5))
+print(MathUtils.multiply(4, 6))`} />
+
+### `@classmethod` — รับ class แทน self
+
+<CodeRunner code={`class Person:
+    def __init__(self, name, age):
+        self.name = name
+        self.age = age
+
+    @classmethod
+    def from_birth_year(cls, name, birth_year):
+        age = 2026 - birth_year
+        return cls(name, age)
+
+    def __str__(self):
+        return f"{self.name} (อายุ {self.age})"
+
+p1 = Person("สมชาย", 25)
+p2 = Person.from_birth_year("สมหญิง", 2000)
+
+print(p1)
+print(p2)`} />
+
+### `@property` — เรียก method เหมือน attribute
+
+<CodeRunner code={`class Rectangle:
+    def __init__(self, width, height):
+        self.width = width
+        self.height = height
+
+    @property
+    def area(self):
+        return self.width * self.height
+
+    @property
+    def perimeter(self):
+        return 2 * (self.width + self.height)
+
+rect = Rectangle(5, 3)
+print(f"กว้าง: {rect.width}")
+print(f"สูง: {rect.height}")
+print(f"พื้นที่: {rect.area}")          # เรียกเหมือน attribute!
+print(f"เส้นรอบรูป: {rect.perimeter}")  # ไม่ต้องใส่ ()`} />
+
+## Decorator with Arguments
+
+<CodeRunner code={`def repeat(times):
+    def decorator(func):
+        @functools.wraps(func)
+        def wrapper(*args, **kwargs):
+            for _ in range(times):
+                result = func(*args, **kwargs)
+            return result
+        return wrapper
+    return decorator
+
+@repeat(3)
+def say_hello(name):
+    print(f"Hello, {name}!")
+
+say_hello("Python")`} />
+
+## Iterator Protocol
+
+Iterator คือ object ที่สามารถวนซ้ำได้ โดยใช้ `__iter__()` และ `__next__()`
+
+<CodeRunner code={`class Countdown:
+    def __init__(self, start):
+        self.current = start
+
+    def __iter__(self):
+        return self
+
+    def __next__(self):
+        if self.current <= 0:
+            raise StopIteration
+        self.current -= 1
+        return self.current + 1
+
+# ใช้ใน for loop ได้
+for num in Countdown(5):
+    print(num, end=" ")
+print()
+
+# ใช้ next() ก็ได้
+cd = Countdown(3)
+print(next(cd))
+print(next(cd))
+print(next(cd))`} />
+
+## Generator Functions — `yield`
+
+Generator ใช้ `yield` แทน `return` — สร้างค่าทีละตัว ประหยัด memory
+
+<CodeRunner code={`def count_up(n):
+    i = 1
+    while i <= n:
+        yield i  # ส่งค่าออก แล้ว "หยุดรอ" จนกว่าจะถูกเรียกอีกครั้ง
+        i += 1
+
+# ใช้ใน for loop
+for num in count_up(5):
+    print(num, end=" ")
+print()
+
+# เป็น generator object
+gen = count_up(3)
+print(type(gen))
+print(next(gen))
+print(next(gen))
+print(next(gen))`} />
+
+### ตัวอย่างจริง — อ่านข้อมูลขนาดใหญ่
+
+<CodeRunner code={`def read_chunks(data, chunk_size):
+    """อ่านข้อมูลทีละ chunk ไม่โหลดทั้งหมดใน memory"""
+    for i in range(0, len(data), chunk_size):
+        yield data[i:i + chunk_size]
+
+big_data = list(range(100))
+for chunk in read_chunks(big_data, 20):
+    print(f"chunk ({len(chunk)} items): {chunk[:5]}...")`} />
+
+### `yield from` — ส่งต่อจาก generator อื่น
+
+<CodeRunner code={`def gen_a():
+    yield 1
+    yield 2
+
+def gen_b():
+    yield 3
+    yield 4
+
+def combined():
+    yield from gen_a()
+    yield from gen_b()
+    yield 5
+
+print(list(combined()))`} />
+
+## สรุป
+
+- **Decorator** — ฟังก์ชันที่ห่อหุ้มฟังก์ชันอื่น ใช้ `@` syntax
+- ใช้ `functools.wraps` รักษา metadata ของฟังก์ชันเดิม
+- **Built-in decorators**: `@lru_cache`, `@staticmethod`, `@classmethod`, `@property`
+- **Decorator with args**: ซ้อน 3 ชั้น — `def decorator(arg) → def wrapper(func) → def inner(*args)`
+- **Iterator**: implement `__iter__()` + `__next__()` + `StopIteration`
+- **Generator**: ใช้ `yield` แทน `return` — สร้างค่าทีละตัว ประหยัด memory
+- **`yield from`** — ส่งต่อค่าจาก generator อื่น
+
+🎉 **ยินดีด้วย! คุณเรียนจบครบทั้ง 15 บทแล้ว** — ลองไปทำโจทย์ฝึกหัดในหน้า Challenge ได้เลย!

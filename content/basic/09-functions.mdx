@@ -1,0 +1,183 @@
+---
+title: "ฟังก์ชัน (Functions)"
+description: "เรียนรู้การสร้างฟังก์ชัน การรับ-ส่งค่า *args **kwargs Type Hints และ Recursion ใน Python"
+category: "basic"
+order: 9
+tags: ["function", "def", "return", "args", "kwargs", "recursion"]
+---
+
+## ทำไมต้อง Function?
+
+เมื่อมีขั้นตอนที่ต้องใช้ซ้ำ เราจะสร้างเป็นฟังก์ชันไว้เพื่อให้ง่ายและสะดวก — เขียนครั้งเดียว เรียกใช้กี่ครั้งก็ได้
+
+## สร้าง Function
+
+<CodeRunner code={`def greet():
+    print("Hello mama!")
+
+# เรียกใช้
+greet()
+greet()`} />
+
+## Parameters — รับค่าเข้า
+
+<CodeRunner code={`def add(a, b):
+    print(f"{a} + {b} = {a + b}")
+
+add(5, 3)
+add(100, 200)`} />
+
+## Return — ส่งค่าออก
+
+`return` ส่งค่าออกจากฟังก์ชันในรูปแบบข้อมูล เพื่อนำไปใช้ต่อได้ (ต่างจาก print ที่แค่แสดงผล)
+
+<CodeRunner code={`def multiply(a, b):
+    return a * b
+
+result = multiply(5, 3)
+print("ผลลัพธ์:", result)
+print("บวกเพิ่ม:", multiply(5, 3) + 20)`} />
+
+### Return หลายค่า
+
+<CodeRunner code={`def calculate(a, b):
+    add = a + b
+    sub = a - b
+    mul = a * b
+    div = a / b
+    return add, sub, mul, div
+
+a, b, c, d = calculate(10, 3)
+print(f"บวก={a} ลบ={b} คูณ={c} หาร={d:.2f}")`} />
+
+## Default Parameters — ค่าเริ่มต้น
+
+<CodeRunner code={`def greet(name, message="Hello"):
+    return f"{message}, {name}!"
+
+print(greet("Alice"))           # ใช้ค่า default
+print(greet("Bob", "Hi"))       # กำหนดค่าเอง
+print(greet("Charlie", "สวัสดี"))`} />
+
+## Type Hints — บอกประเภทข้อมูล
+
+ช่วยให้โค้ดอ่านง่ายขึ้นและ IDE ช่วยตรวจ error ได้
+
+<CodeRunner code={`def greet(name: str) -> str:
+    return f"Hello, {name}!"
+
+print(greet("Alice"))
+
+def add(a: int, b: int) -> int:
+    return a + b
+
+print(add(5, 3))`} />
+
+## `*args` — รับค่าไม่จำกัด (positional)
+
+<CodeRunner code={`def total(*args):
+    print(f"ได้รับ: {args}")
+    print(f"type: {type(args)}")  # tuple
+    return sum(args)
+
+print(total(1, 2, 3))
+print(total(10, 20, 30, 40, 50))`} />
+
+## `**kwargs` — รับค่าไม่จำกัด (keyword)
+
+<CodeRunner code={`def show_info(**kwargs):
+    print(f"ได้รับ: {kwargs}")
+    print(f"type: {type(kwargs)}")  # dict
+    for key, value in kwargs.items():
+        print(f"  {key}: {value}")
+
+show_info(name="สมชาย", age=25, city="กรุงเทพ")`} />
+
+### ใช้ `*args` กับ `**kwargs` ร่วมกัน
+
+<CodeRunner code={`def flexible(a, b, *args, **kwargs):
+    print(f"a={a}, b={b}")
+    print(f"args={args}")
+    print(f"kwargs={kwargs}")
+
+flexible(1, 2, 3, 4, 5, name="test", debug=True)`} />
+
+## Mutable Default Argument — กับดักสำหรับมือใหม่
+
+<CodeRunner code={`# อันตราย! list เดิมถูกใช้ซ้ำทุกครั้ง
+def bad_append(value, lst=[]):
+    lst.append(value)
+    return lst
+
+print(bad_append(1))  # [1]
+print(bad_append(2))  # [1, 2] !!!
+
+# วิธีที่ถูกต้อง — ใช้ None แทน
+def good_append(value, lst=None):
+    if lst is None:
+        lst = []
+    lst.append(value)
+    return lst
+
+print(good_append(1))  # [1]
+print(good_append(2))  # [2] ✓`} />
+
+## Recursion — ฟังก์ชันเรียกตัวเอง
+
+ฟังก์ชันที่เรียกใช้ตัวเองซ้ำๆ เพื่อแก้ปัญหาย่อย จนกว่าจะถึงเงื่อนไขหยุด (base case)
+
+### Factorial
+
+<CodeRunner code={`def factorial(n):
+    if n == 0 or n == 1:  # base case
+        return 1
+    else:
+        return n * factorial(n - 1)  # เรียกตัวเอง
+
+print(f"5! = {factorial(5)}")
+print(f"10! = {factorial(10)}")`} />
+
+### Fibonacci
+
+<CodeRunner code={`def fibonacci(n):
+    if n <= 0:
+        return "Invalid"
+    elif n == 1 or n == 2:
+        return 1
+    else:
+        return fibonacci(n - 1) + fibonacci(n - 2)
+
+for i in range(1, 11):
+    print(f"F({i}) = {fibonacci(i)}")`} />
+
+## Docstrings — เอกสารประกอบฟังก์ชัน
+
+<CodeRunner code={`def bmi(weight: float, height: float) -> float:
+    """คำนวณค่า BMI
+
+    Args:
+        weight: น้ำหนักเป็น kg
+        height: ส่วนสูงเป็น m
+
+    Returns:
+        ค่า BMI (Body Mass Index)
+    """
+    return weight / (height ** 2)
+
+result = bmi(70, 1.75)
+print(f"BMI = {result:.1f}")
+
+# ดู docstring
+print(bmi.__doc__)`} />
+
+## สรุป
+
+- **def** สร้างฟังก์ชัน, **return** ส่งค่าออก (return หลายค่าได้)
+- **Default parameters**: `def f(x, y=10):` — กำหนดค่าเริ่มต้น
+- **Type hints**: `def f(x: int) -> str:` — บอกชนิดข้อมูล
+- **`*args`** = tuple ของ positional args | **`**kwargs`** = dict ของ keyword args
+- **ระวัง mutable default** — ใช้ `None` แทน `[]` หรือ `{}`
+- **Recursion** — ฟังก์ชันเรียกตัวเอง ต้องมี base case เสมอ
+- **Docstrings** — เขียนเอกสารประกอบด้วย `"""..."""`
+
+บทต่อไป: **Lambda และ Higher-Order Functions** — ฟังก์ชันนิรนาม map filter sorted

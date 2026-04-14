@@ -1,0 +1,218 @@
+---
+title: "ตัวแปรและชนิดข้อมูล"
+description: "เรียนรู้การจัดการตัวแปร ชนิดข้อมูล การรับค่า Type Casting และ Variable Scope ใน Python"
+category: "basic"
+order: 3
+tags: ["variable", "data-type", "input", "scope"]
+---
+
+## ตัวแปร (Variables)
+
+ตัวแปร เปรียบเสมือนภาชนะสำหรับเก็บค่าข้อมูล ใช้อ้างอิงข้อมูลเพื่อนำค่ามาประมวลผลต่อได้
+
+<CodeRunner code={`number = 10
+print(number)
+print("The number is", number)`} />
+
+### สร้างตัวแปรหลายตัวและนำมาคำนวณ
+
+<CodeRunner code={`first = 35
+second = 70
+print(first, second)
+
+added = first + 99
+print("ค่าที่บวกแล้ว:", added)`} />
+
+### กฎการตั้งชื่อตัวแปร
+
+- ขึ้นต้นด้วยตัวอักษรหรือ `_` เท่านั้น
+- ใช้ตัวอักษร ตัวเลข และ `_` ได้
+- **ตัวพิมพ์เล็ก-ใหญ่ถือว่าต่างกัน** (`name` ≠ `Name`)
+- ใช้ snake_case สำหรับตัวแปรและฟังก์ชัน, UPPER_CASE สำหรับค่าคงที่
+
+## ชนิดข้อมูลพื้นฐาน
+
+![Python Data Types](/images/lessons/variables/python-data-types.webp)
+
+<CodeRunner code={`x_integer = 123          # int — เลขจำนวนเต็ม
+x_float = 456.789        # float — เลขทศนิยม
+x_string = "Hello"       # str — ข้อความ
+x_boolean = True         # bool — ค่าจริง/เท็จ
+
+print(x_integer, x_float, x_string, x_boolean)
+print(type(x_integer))
+print(type(x_float))
+print(type(x_string))
+print(type(x_boolean))`} />
+
+## การรับค่าจากผู้ใช้ — `input()`
+
+`input()` ใช้รับข้อมูลจาก user เพื่อนำไปประมวลผลต่อ
+
+**หมายเหตุ:** `input()` ไม่สามารถรันบนเว็บนี้ได้เนื่องจาก Pyodide ไม่รองรับ interactive input — ตัวอย่างนี้แสดงรูปแบบการใช้งาน
+
+<CodeRunner code={`# ตัวอย่างการใช้ input() (ไม่สามารถรันบนเว็บได้)
+# name = input("ใส่ชื่อของคุณ: ")
+# print("สวัสดี", name)
+
+# แต่เราจำลองได้แบบนี้:
+name = "สมชาย"  # สมมติว่า user กรอก "สมชาย"
+print("สวัสดี", name)`} />
+
+### รับค่าตัวเลข
+
+`input()` จะได้ค่าเป็น `str` เสมอ ต้องแปลงเองถ้าต้องการตัวเลข
+
+<CodeRunner code={`# input_number = int(input("ใส่ตัวเลข: "))
+input_number = 42  # สมมติว่า user กรอก 42
+print("ตัวเลขของคุณคือ", input_number)
+print("type:", type(input_number))`} />
+
+## Type Casting — การเปลี่ยนชนิดข้อมูล
+
+<CodeRunner code={`integer = 35
+print(type(integer), integer)
+
+# เปลี่ยนเป็น float
+new_float = float(integer)
+print(type(new_float), new_float)
+
+# เปลี่ยนเป็น string
+new_string = str(integer)
+print(type(new_string), new_string)
+
+# เปลี่ยนจาก string เป็น int
+number_str = "100"
+number_int = int(number_str)
+print(type(number_int), number_int)`} />
+
+### ข้อควรระวัง — เปลี่ยนไม่ได้ทุกกรณี
+
+<CodeRunner code={`# สิ่งที่เปลี่ยนไม่ได้จะ Error
+try:
+    var = float("abc")
+except ValueError as e:
+    print(f"Error: {e}")
+    print("ไม่สามารถเปลี่ยน 'abc' เป็น float ได้")`} />
+
+## None และ Truthiness
+
+### `None` — ค่าว่าง
+
+`None` คือค่าพิเศษที่แปลว่า "ไม่มีค่า" ใช้เมื่อตัวแปรยังไม่มีข้อมูล
+
+<CodeRunner code={`x = None
+print(x)
+print(type(x))
+
+# เช็ค None ใช้ is ไม่ใช่ ==
+if x is None:
+    print("x ไม่มีค่า")
+
+x = 42
+if x is not None:
+    print(f"x มีค่าเท่ากับ {x}")`} />
+
+### Falsy Values — ค่าที่ Python มองว่าเป็น "เท็จ"
+
+<CodeRunner code={`# ค่าเหล่านี้ Python ถือว่าเป็น False
+falsy_values = [0, 0.0, "", [], {}, set(), None, False]
+
+for val in falsy_values:
+    if not val:
+        print(f"{str(val):>10} ({type(val).__name__:>5}) → Falsy")`} />
+
+### Short-circuit evaluation
+
+<CodeRunner code={`# or — ถ้าค่าแรกเป็นจริง ใช้ค่าแรกเลย
+name = "" or "ไม่ระบุชื่อ"
+print(name)
+
+# and — ถ้าค่าแรกเป็นเท็จ ใช้ค่าแรกเลย
+result = 0 and 100
+print(result)
+
+result2 = 42 and 100
+print(result2)`} />
+
+## Variable Scope — ขอบเขตของตัวแปร
+
+![LEGB Scope](/images/lessons/variables/legb-scope-gfg.png)
+
+**LEGB Rule** คือหลักการที่ Python ใช้ค้นหาตัวแปร เรียงจากในสุดไปนอกสุด:
+
+- **L (Local)** — ภายในฟังก์ชันปัจจุบัน
+- **E (Enclosing)** — ภายในฟังก์ชันที่ครอบอยู่
+- **G (Global)** — ระดับไฟล์/โปรแกรม
+- **B (Built-in)** — ฟังก์ชันที่ Python มีให้เลย เช่น `print`, `len`
+
+<CodeRunner code={`x = 3  # global scope
+
+def outer_function():
+    x = 1  # enclosing scope
+    print("Outer:", x)
+
+    def inner_function():
+        x = 2  # local scope
+        print("Inner:", x)
+
+    inner_function()
+
+outer_function()
+print("Global:", x)`} />
+
+### คำสั่ง `global`
+
+<CodeRunner code={`x = 15
+print("ก่อน:", x)
+
+def change_global():
+    global x
+    x = 10
+    print("ในฟังก์ชัน:", x)
+
+change_global()
+print("หลัง:", x)`} />
+
+## Variable ID — `id()` และ Mutable vs Immutable
+
+![Variable Reference](/images/lessons/variables/variable-reference-1.png)
+
+ฟังก์ชัน `id()` แสดงตำแหน่งของข้อมูลใน memory
+
+### Immutable — เปลี่ยนค่าได้แต่สร้างใหม่
+
+<CodeRunner code={`a = 100
+b = a
+print(f"a = {a}, id = {id(a)}")
+print(f"b = {b}, id = {id(b)}")
+print(f"id เหมือนกัน: {id(a) == id(b)}")
+
+a = 200  # สร้าง object ใหม่
+print(f"\\nหลังเปลี่ยน a = {a}")
+print(f"a id = {id(a)}")
+print(f"b ยังเท่าเดิม = {b}, id = {id(b)}")`} />
+
+### Mutable — เปลี่ยนค่าใน object เดิมได้
+
+<CodeRunner code={`lst1 = [1, 2, 3]
+lst2 = lst1  # ชี้ไปที่เดียวกัน
+print(f"lst1 id: {id(lst1)}")
+print(f"lst2 id: {id(lst2)}")
+
+lst1.append(4)  # เปลี่ยน lst1 จะกระทบ lst2 ด้วย
+print(f"\\nlst1 = {lst1}")
+print(f"lst2 = {lst2}")
+print(f"id ยังเหมือนเดิม: {id(lst1) == id(lst2)}")`} />
+
+## สรุป
+
+- ตัวแปรคือภาชนะเก็บข้อมูล สร้างด้วย `=`
+- ชนิดข้อมูลพื้นฐาน: `int`, `float`, `str`, `bool`, `None`
+- ใช้ `type()` ตรวจสอบชนิด, `input()` รับค่า
+- Type casting: `int()`, `float()`, `str()` — แต่ใช้ผิดจะ Error
+- **Falsy**: `0`, `""`, `[]`, `None`, `False` — ใน Python ถือว่าเป็นเท็จ
+- **LEGB Rule**: Python ค้นหาตัวแปร Local → Enclosing → Global → Built-in
+- **Immutable** (int, str, tuple): เปลี่ยนค่า = สร้างใหม่ | **Mutable** (list, dict, set): เปลี่ยนในที่เดิม
+
+บทต่อไป: **ตัวดำเนินการ (Operators)** — บวก ลบ คูณ หาร และตัวดำเนินการอื่นๆ

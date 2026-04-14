@@ -1,0 +1,206 @@
+---
+title: "การจัดการข้อผิดพลาด (Error Handling)"
+description: "เรียนรู้ try/except/else/finally, การ raise exception, Custom Exception และการอ่าน Traceback"
+category: "basic"
+order: 13
+tags: ["try", "except", "error", "exception", "raise"]
+---
+
+## ทำไมต้อง Error Handling?
+
+โปรแกรมที่ดีต้องรับมือกับข้อผิดพลาดได้ — ไม่ใช่ crash ทิ้งเมื่อมีปัญหา
+
+![Try/Except Flow](/images/lessons/error-handling/try-except-flow.png)
+
+<CodeRunner code={`# ถ้าไม่มี error handling — โปรแกรม crash
+# result = 10 / 0  # ZeroDivisionError!
+
+# มี error handling — โปรแกรมทำงานต่อได้
+try:
+    result = 10 / 0
+except ZeroDivisionError:
+    print("ไม่สามารถหารด้วย 0 ได้!")
+print("โปรแกรมยังทำงานต่อ")`} />
+
+## `try` / `except` พื้นฐาน
+
+<CodeRunner code={`try:
+    number = int("abc")
+except ValueError:
+    print("แปลงเป็นตัวเลขไม่ได้!")
+
+# จับ error แล้วแสดงข้อความ error
+try:
+    number = int("hello")
+except ValueError as e:
+    print(f"Error: {e}")`} />
+
+## จับ Exception เฉพาะประเภท
+
+<CodeRunner code={`def safe_divide(a, b):
+    try:
+        result = a / b
+    except ZeroDivisionError:
+        return "หารด้วย 0 ไม่ได้!"
+    except TypeError:
+        return "ชนิดข้อมูลไม่ถูกต้อง!"
+    return result
+
+print(safe_divide(10, 3))
+print(safe_divide(10, 0))
+print(safe_divide("10", 3))`} />
+
+### Exception ที่พบบ่อย
+
+| Exception | เกิดเมื่อ |
+|---|---|
+| `ValueError` | ค่าไม่ถูกต้อง เช่น `int("abc")` |
+| `TypeError` | ชนิดข้อมูลผิด เช่น `"2" + 2` |
+| `KeyError` | ไม่มี key ใน dict |
+| `IndexError` | index เกินขอบเขต list |
+| `ZeroDivisionError` | หารด้วย 0 |
+| `FileNotFoundError` | หาไฟล์ไม่เจอ |
+| `AttributeError` | เรียก method/attribute ที่ไม่มี |
+
+<CodeRunner code={`# ทดสอบ exception ต่างๆ
+tests = [
+    ("int('abc')", lambda: int("abc")),
+    ("'2' + 2", lambda: "2" + 2),
+    ("{}['key']", lambda: {}["key"]),
+    ("[1,2][5]", lambda: [1,2][5]),
+    ("10 / 0", lambda: 10 / 0),
+]
+
+for name, func in tests:
+    try:
+        func()
+    except Exception as e:
+        print(f"{name:15s} → {type(e).__name__}: {e}")`} />
+
+## `else` — ทำเมื่อไม่มี error
+
+<CodeRunner code={`try:
+    number = int("42")
+except ValueError:
+    print("แปลงไม่ได้!")
+else:
+    print(f"แปลงสำเร็จ: {number}")
+    print(f"ยกกำลัง 2 = {number ** 2}")`} />
+
+## `finally` — ทำเสมอ ไม่ว่าจะ error หรือไม่
+
+<CodeRunner code={`def read_file(filename):
+    try:
+        f = open(filename, "r")
+        content = f.read()
+        print(f"อ่านได้: {content}")
+    except FileNotFoundError:
+        print(f"ไม่พบไฟล์: {filename}")
+    finally:
+        print("จบการทำงาน (finally ทำเสมอ)")
+
+# สร้างไฟล์ทดสอบ
+with open("test.txt", "w") as f:
+    f.write("Hello!")
+
+read_file("test.txt")
+print("---")
+read_file("nonexist.txt")`} />
+
+## `raise` — สร้าง error เอง
+
+<CodeRunner code={`def set_age(age):
+    if age < 0:
+        raise ValueError("อายุต้องไม่ติดลบ!")
+    if age > 150:
+        raise ValueError("อายุไม่สมจริง!")
+    return age
+
+try:
+    set_age(-5)
+except ValueError as e:
+    print(f"Error: {e}")
+
+try:
+    result = set_age(25)
+    print(f"อายุ: {result}")
+except ValueError as e:
+    print(f"Error: {e}")`} />
+
+## Custom Exception — สร้าง Exception เอง
+
+<CodeRunner code={`class InsufficientFundsError(Exception):
+    def __init__(self, balance, amount):
+        self.balance = balance
+        self.amount = amount
+        super().__init__(
+            f"ยอดเงิน {balance} บาท ไม่พอถอน {amount} บาท"
+        )
+
+class BankAccount:
+    def __init__(self, balance=0):
+        self.balance = balance
+
+    def withdraw(self, amount):
+        if amount > self.balance:
+            raise InsufficientFundsError(self.balance, amount)
+        self.balance -= amount
+        return self.balance
+
+account = BankAccount(1000)
+try:
+    print(f"ถอน 500: เหลือ {account.withdraw(500)}")
+    print(f"ถอน 700: เหลือ {account.withdraw(700)}")
+except InsufficientFundsError as e:
+    print(f"Error: {e}")`} />
+
+## `assert` — ตรวจสอบเงื่อนไข
+
+ใช้สำหรับเช็คสิ่งที่ "ต้องเป็นจริงเสมอ" — ถ้าไม่จริงจะ raise AssertionError
+
+<CodeRunner code={`def calculate_discount(price, percent):
+    assert 0 <= percent <= 100, "เปอร์เซ็นต์ต้องอยู่ระหว่าง 0-100"
+    assert price >= 0, "ราคาต้องไม่ติดลบ"
+    return price * (1 - percent / 100)
+
+print(calculate_discount(1000, 20))
+
+try:
+    calculate_discount(1000, 150)
+except AssertionError as e:
+    print(f"Assert failed: {e}")`} />
+
+## อ่าน Traceback — วิธีอ่าน error message
+
+<CodeRunner code={`# Traceback อ่านจากล่างขึ้นบน!
+def func_c():
+    return 1 / 0  # error เกิดที่นี่
+
+def func_b():
+    return func_c()
+
+def func_a():
+    return func_b()
+
+try:
+    func_a()
+except ZeroDivisionError:
+    import traceback
+    print("=== Traceback ===")
+    traceback.print_exc()
+    print("=================")
+    print("\\nอ่าน Traceback จากล่างขึ้นบน:")
+    print("1. บรรทัดสุดท้าย = ประเภท error")
+    print("2. บรรทัดก่อนหน้า = จุดที่เกิด error")
+    print("3. ย้อนขึ้นไป = ลำดับการเรียกฟังก์ชัน")`} />
+
+## สรุป
+
+- **try/except** — จับ error ไม่ให้โปรแกรม crash
+- **except เฉพาะ** — `ValueError`, `TypeError`, `KeyError` ฯลฯ
+- **else** — ทำเมื่อไม่มี error | **finally** — ทำเสมอ
+- **raise** — สร้าง error เอง | **Custom Exception** — สร้างคลาส exception
+- **assert** — ตรวจสอบเงื่อนไขที่ต้องจริง
+- **Traceback** — อ่านจากล่างขึ้นบน: error → จุดเกิด → ลำดับการเรียก
+
+บทต่อไป: **OOP** — Class และ Object-Oriented Programming

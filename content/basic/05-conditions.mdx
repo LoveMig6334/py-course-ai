@@ -1,0 +1,209 @@
+---
+title: "เงื่อนไขและการตัดสินใจ"
+description: "เรียนรู้การใช้ if-elif-else, logical operators, ternary expression และ match statement ใน Python"
+category: "basic"
+order: 5
+tags: ["if", "elif", "else", "match", "logic"]
+---
+
+## เครื่องหมายเปรียบเทียบ
+
+ก่อนจะเขียนเงื่อนไขได้ ต้องรู้จักเครื่องหมายเปรียบเทียบก่อน:
+
+- `==` เท่ากับ | `!=` ไม่เท่ากับ
+- `>` มากกว่า | `<` น้อยกว่า
+- `>=` มากกว่าหรือเท่ากับ | `<=` น้อยกว่าหรือเท่ากับ
+
+<CodeRunner code={`print(9 == 9)   # True
+print(9 == 8)   # False
+print(9 != 8)   # True
+print(10 > 5)   # True
+print(10 <= 10) # True`} />
+
+## คำสั่ง `if`
+
+`if` ใช้ตรวจสอบว่าเงื่อนไขเป็นจริงหรือไม่ ถ้าจริงจะทำงานในบล็อก ถ้าไม่จริงจะข้ามไป
+
+**สิ่งสำคัญ: ต้องเว้นวรรค (indentation) ให้ถูกต้อง** — Python ใช้การเว้นวรรคในการกำหนดว่าโค้ดไหนอยู่ภายใต้ if
+
+<CodeRunner code={`if 9 == 9:
+    print("เก้าเท่ากับเก้า")
+
+# ถ้าเงื่อนไขเป็นเท็จ จะไม่ทำอะไร
+if 9 == 8:
+    print("อันนี้จะไม่แสดง")
+print("แต่อันนี้แสดงเพราะอยู่นอก if")`} />
+
+## `if-else`
+
+<CodeRunner code={`a = 7
+if a > 10:
+    print("a มากกว่า 10")
+else:
+    print("a ไม่มากกว่า 10")`} />
+
+## `if-elif-else` — หลายเงื่อนไข
+
+`elif` ใช้เมื่อต้องการเช็คเงื่อนไขหลายตัว ถ้า `if` ไม่จริง ก็มาเช็ค `elif` ต่อ
+
+<CodeRunner code={`a = 20
+if a <= 10:
+    print("เข้าเงื่อนไขแรก")
+elif a <= 20:
+    print("เข้าเงื่อนไขที่ 2")
+elif a <= 30:
+    print("เข้าเงื่อนไขที่ 3")
+else:
+    print("ไม่เข้าเงื่อนไขไหนเลย")`} />
+
+### Nested if — if ซ้อน if
+
+<CodeRunner code={`if 9 == 9:
+    print("เงื่อนไขนอกเป็นจริง")
+    if 9 == 8:
+        print("เงื่อนไขในไม่จริง — ไม่แสดง")
+    else:
+        print("เข้า else ของเงื่อนไขใน")`} />
+
+### if หลายกลุ่ม
+
+ถ้ามี `if` มากกว่าหนึ่งกลุ่ม ก็จะตรวจสอบแยกกัน ทำงานทั้งหมดที่เข้าเงื่อนไข
+
+<CodeRunner code={`a = 25
+
+# กลุ่ม if แรก
+if a <= 10:
+    print("กลุ่ม 1: if")
+elif a <= 20:
+    print("กลุ่ม 1: elif")
+else:
+    print("กลุ่ม 1: else")
+
+# กลุ่ม if ที่สอง (ทำงานแยกจากกลุ่มแรก)
+if a >= 20:
+    print("กลุ่ม 2: if")
+else:
+    print("กลุ่ม 2: else")`} />
+
+## Logical Operators
+
+### `or` — เป็นจริงเมื่อมีเงื่อนไขอย่างน้อยหนึ่งตัวเป็นจริง
+
+<CodeRunner code={`if 9 == 9 or 9 == 10:
+    print("เงื่อนไขเป็นจริง")
+else:
+    print("เงื่อนไขไม่เป็นจริง")
+# แค่ 9 == 9 เป็นจริงก็พอ`} />
+
+### `and` — เป็นจริงเมื่อทุกเงื่อนไขเป็นจริง
+
+<CodeRunner code={`if 9 == 9 and 9 == 10:
+    print("เงื่อนไขเป็นจริง")
+else:
+    print("เงื่อนไขไม่เป็นจริง")
+# 9 == 10 เป็นเท็จ ดังนั้นทั้งหมดเป็นเท็จ`} />
+
+### `not` — กลับค่า True ↔ False
+
+<CodeRunner code={`if not (9 == 9 and 9 == 10):
+    print("not ทำให้ False กลายเป็น True")
+
+print(not True)   # False
+print(not False)  # True`} />
+
+### ตัวอย่าง — โปรแกรมตัดเกรด
+
+<CodeRunner code={`score = 75
+
+if score >= 80:
+    grade = "4"
+elif score >= 70:
+    grade = "3"
+elif score >= 60:
+    grade = "2"
+elif score >= 50:
+    grade = "1"
+else:
+    grade = "0"
+
+print(f"คะแนน {score} ได้เกรด {grade}")`} />
+
+## Ternary Expression — เขียนเงื่อนไขบรรทัดเดียว
+
+<CodeRunner code={`age = 20
+status = "ผู้ใหญ่" if age >= 18 else "เยาวชน"
+print(f"สถานะ: {status}")
+
+# ซ้อนกันก็ได้ (แต่อย่าซ้อนเยอะจะอ่านยาก)
+temp = 35
+weather = "ร้อน" if temp > 30 else ("เย็น" if temp < 15 else "สบาย")
+print(f"อุณหภูมิ {temp}°C: {weather}")`} />
+
+## Match Statement (Python 3.10+)
+
+`match/case` ใช้แทน if/elif ที่ต้องเช็คค่าหลายๆ ตัว ทำให้โค้ดอ่านง่ายขึ้น
+
+### พื้นฐาน
+
+<CodeRunner code={`command = "start"
+
+match command:
+    case "start":
+        print("เริ่มต้นระบบ")
+    case "stop":
+        print("หยุดระบบ")
+    case "restart":
+        print("รีสตาร์ทระบบ")
+    case _:
+        print(f"ไม่รู้จักคำสั่ง: {command}")`} />
+
+### ใช้ `|` สำหรับหลายค่า
+
+<CodeRunner code={`day = "Saturday"
+
+match day:
+    case "Monday" | "Tuesday" | "Wednesday" | "Thursday" | "Friday":
+        print(f"{day} — วันทำงาน")
+    case "Saturday" | "Sunday":
+        print(f"{day} — วันหยุด")
+    case _:
+        print("วันไม่ถูกต้อง")`} />
+
+### Guard clause ด้วย `if`
+
+<CodeRunner code={`age = 15
+status = "student"
+
+match status:
+    case "student" if age >= 18:
+        print("นักศึกษาผู้ใหญ่")
+    case "student" if age < 18:
+        print("นักเรียนเยาวชน")
+    case "teacher":
+        print("อาจารย์")
+    case _:
+        print("อื่นๆ")`} />
+
+### Destructuring — แกะ tuple
+
+<CodeRunner code={`point = (3, 0)
+
+match point:
+    case (0, 0):
+        print("จุดกำเนิด")
+    case (x, 0):
+        print(f"อยู่บนแกน X ที่ตำแหน่ง {x}")
+    case (0, y):
+        print(f"อยู่บนแกน Y ที่ตำแหน่ง {y}")
+    case (x, y):
+        print(f"อยู่ที่ ({x}, {y})")`} />
+
+## สรุป
+
+- `if` / `elif` / `else` — ตรวจสอบเงื่อนไขทีละตัว
+- **Indentation สำคัญมาก** — เว้น 4 ช่องว่าง
+- `and` = ทุกเงื่อนไขต้องจริง | `or` = แค่ตัวเดียวจริงก็พอ | `not` = กลับค่า
+- **Ternary**: `ค่า_ถ้าจริง if เงื่อนไข else ค่า_ถ้าเท็จ`
+- **match/case** (Python 3.10+) — เช็คค่าหลายตัวอ่านง่ายกว่า if/elif, รองรับ destructuring
+
+บทต่อไป: **การวนซ้ำ (Loop)** — for loop และ while loop

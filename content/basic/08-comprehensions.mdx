@@ -1,0 +1,177 @@
+---
+title: "Comprehensions และ Generator"
+description: "เรียนรู้ List, Dict, Set Comprehension และ Generator Expression — เครื่องมือสร้างข้อมูลแบบกระชับ"
+category: "basic"
+order: 8
+tags: ["comprehension", "generator", "next"]
+---
+
+## List Comprehension
+
+วิธีสร้าง list จาก loop ในบรรทัดเดียว — กระชับ อ่านง่าย เร็วกว่า loop ปกติ
+
+### พื้นฐาน
+
+<CodeRunner code={`# แบบ loop ปกติ
+squares = []
+for x in range(10):
+    squares.append(x ** 2)
+print("loop:", squares)
+
+# แบบ comprehension
+squares2 = [x ** 2 for x in range(10)]
+print("comp:", squares2)`} />
+
+### ใส่เงื่อนไข `if`
+
+<CodeRunner code={`# เลขคู่เท่านั้น
+evens = [x for x in range(20) if x % 2 == 0]
+print("เลขคู่:", evens)
+
+# สตริงที่ยาวกว่า 4 ตัวอักษร
+words = ["hello", "hi", "python", "ok", "world"]
+long_words = [w for w in words if len(w) > 4]
+print("คำยาว:", long_words)`} />
+
+### ใส่ `if/else` expression
+
+<CodeRunner code={`# ถ้ามากกว่า 0 ใช้ค่าเดิม ถ้าไม่ใช่ ใช้ 0
+numbers = [-3, -1, 0, 2, 5, -4, 7]
+positive = [x if x > 0 else 0 for x in numbers]
+print(positive)
+
+# แปลงเกรด
+scores = [85, 42, 73, 91, 55]
+results = ["ผ่าน" if s >= 50 else "ไม่ผ่าน" for s in scores]
+print(results)`} />
+
+### Nested Comprehension
+
+<CodeRunner code={`# สร้างตาราง 3x3
+matrix = [[i * 3 + j + 1 for j in range(3)] for i in range(3)]
+for row in matrix:
+    print(row)
+
+# flatten 2D → 1D
+flat = [x for row in matrix for x in row]
+print("flat:", flat)`} />
+
+## Dict Comprehension
+
+<CodeRunner code={`# สร้าง dict จาก list
+fruits = ["apple", "banana", "cherry"]
+fruit_lengths = {fruit: len(fruit) for fruit in fruits}
+print(fruit_lengths)
+
+# ยกกำลัง 2
+squares_dict = {x: x**2 for x in range(1, 6)}
+print(squares_dict)
+
+# กรอง dict
+scores = {"สมชาย": 85, "สมหญิง": 42, "สมศักดิ์": 73}
+passed = {name: score for name, score in scores.items() if score >= 50}
+print("ผ่าน:", passed)`} />
+
+## Set Comprehension
+
+<CodeRunner code={`# หาตัวอักษรที่ไม่ซ้ำ
+text = "hello world"
+unique_chars = {c for c in text if c != " "}
+print(unique_chars)
+
+# เลขที่หาร 3 ลงตัว
+div3 = {x for x in range(30) if x % 3 == 0}
+print(sorted(div3))`} />
+
+## Generator Expression
+
+Generator เหมือน list comprehension แต่ใช้ `()` แทน `[]` — **ไม่สร้างข้อมูลทั้งหมดทีเดียว** แต่สร้างทีละตัวเมื่อต้องการ (lazy evaluation)
+
+<CodeRunner code={`# List — สร้างทั้งหมดใน memory
+list_comp = [x ** 2 for x in range(10)]
+print("list:", list_comp)
+print("type:", type(list_comp))
+
+# Generator — สร้างทีละตัว
+gen_comp = (x ** 2 for x in range(10))
+print("generator:", gen_comp)
+print("type:", type(gen_comp))
+
+# ใช้ list() แปลงเป็น list ได้
+print("to list:", list(gen_comp))`} />
+
+### ข้อดีของ Generator — ประหยัด memory
+
+<CodeRunner code={`import sys
+
+# เปรียบเทียบ memory
+list_size = sys.getsizeof([x for x in range(10000)])
+gen_size = sys.getsizeof(x for x in range(10000))
+
+print(f"List: {list_size:,} bytes")
+print(f"Generator: {gen_size:,} bytes")
+print(f"ประหยัดไป: {list_size - gen_size:,} bytes")`} />
+
+## `next()` + Generator — ลดรูป if/elif
+
+นี่คือเทคนิคที่ใช้แทน if/elif หลายชั้นได้อย่างสวยงาม
+
+### ปัญหา: if/elif ยาวเหยียด
+
+<CodeRunner code={`# สมมติต้องคิดราคาตามอายุ
+age = 12
+
+# แบบ if/elif (ใช้ได้แต่ยาว)
+if age < 5:
+    price = 0       # เด็กเล็กฟรี
+elif age < 13:
+    price = 50      # เด็ก
+elif age < 20:
+    price = 100     # วัยรุ่น
+else:
+    price = 150     # ผู้ใหญ่
+    
+print(f"อายุ {age}: ราคา {price} บาท")`} />
+
+### วิธีลดรูปด้วย `next()`
+
+<CodeRunner code={`age = 12
+
+# กำหนดช่วงอายุกับราคาเป็น list ของ tuple
+age_prices = [(5, 0), (13, 50), (20, 100)]
+
+# next() จะหาค่าแรกที่ตรงเงื่อนไข
+price = next(
+    (price for age_limit, price in age_prices if age < age_limit),
+    150  # ค่า default ถ้าไม่เข้าเงื่อนไขไหนเลย
+)
+
+print(f"อายุ {age}: ราคา {price} บาท")
+
+# ลองเปลี่ยนอายุ
+for test_age in [3, 8, 17, 25]:
+    p = next((price for limit, price in age_prices if test_age < limit), 150)
+    print(f"อายุ {test_age}: {p} บาท")`} />
+
+### ทำไม `next()` ถึงทำงานได้?
+
+<CodeRunner code={`# next() ดึงค่าแรกจาก generator
+gen = (x for x in [10, 20, 30])
+print(next(gen))  # 10
+print(next(gen))  # 20
+print(next(gen))  # 30
+
+# ถ้าหมดแล้วจะ Error — แต่ใส่ค่า default ได้
+gen2 = (x for x in [])
+print(next(gen2, "ไม่มีค่า"))  # ไม่ Error`} />
+
+## สรุป
+
+- **List Comprehension**: `[expr for x in iterable if condition]`
+- **Dict Comprehension**: `{key: value for x in iterable}`
+- **Set Comprehension**: `{expr for x in iterable}`
+- **Generator Expression**: `(expr for x in iterable)` — lazy, ประหยัด memory
+- **`next()` + Generator** — ลดรูป if/elif ได้สวยงาม
+- ใช้ comprehension เมื่อ logic ง่าย — ถ้าซับซ้อนเกินให้ใช้ loop ปกติจะอ่านง่ายกว่า
+
+บทต่อไป: **ฟังก์ชัน** — สร้างโค้ดที่ reuse ได้

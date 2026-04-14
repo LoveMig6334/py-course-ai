@@ -1,0 +1,174 @@
+---
+title: "Modules และ Standard Library"
+description: "เรียนรู้การ import modules, Standard Library ที่ใช้บ่อย และการติดตั้ง package ด้วย pip"
+category: "basic"
+order: 11
+tags: ["import", "module", "stdlib", "pip"]
+---
+
+## Module คืออะไร?
+
+Module คือไฟล์ Python ที่เก็บฟังก์ชัน, คลาส, ตัวแปรไว้ให้เราเรียกใช้ — เหมือน "กล่องเครื่องมือ" ที่คนอื่นสร้างไว้แล้ว
+
+### วิธี import
+
+<CodeRunner code={`# วิธีที่ 1: import ทั้ง module
+import math
+print(math.pi)
+print(math.sqrt(16))
+
+# วิธีที่ 2: import เฉพาะที่ต้องการ
+from math import pi, sqrt
+print(pi)
+print(sqrt(25))
+
+# วิธีที่ 3: ตั้งชื่อย่อ
+import math as m
+print(m.ceil(4.3))
+print(m.floor(4.7))`} />
+
+## `__name__ == "__main__"`
+
+ใช้เช็คว่าไฟล์ถูกรันโดยตรง หรือถูก import
+
+<CodeRunner code={`# ถ้ารันไฟล์นี้โดยตรง → __name__ = "__main__"
+# ถ้าถูก import จากไฟล์อื่น → __name__ = ชื่อ module
+
+print(f"__name__ = {__name__}")
+
+def main():
+    print("โปรแกรมหลัก")
+
+if __name__ == "__main__":
+    main()`} />
+
+## Standard Library — เครื่องมือที่ Python มีให้เลย
+
+### `math` — คณิตศาสตร์
+
+<CodeRunner code={`import math
+
+print(f"pi = {math.pi}")
+print(f"e = {math.e}")
+print(f"sqrt(144) = {math.sqrt(144)}")
+print(f"ceil(4.1) = {math.ceil(4.1)}")
+print(f"floor(4.9) = {math.floor(4.9)}")
+print(f"log(100, 10) = {math.log(100, 10)}")
+print(f"factorial(5) = {math.factorial(5)}")`} />
+
+### `random` — สุ่ม
+
+<CodeRunner code={`import random
+
+# สุ่มเลขจำนวนเต็ม
+print("randint(1, 10):", random.randint(1, 10))
+
+# สุ่มทศนิยม 0-1
+print("random():", round(random.random(), 4))
+
+# สุ่มเลือกจาก list
+fruits = ["apple", "banana", "cherry", "grape"]
+print("choice:", random.choice(fruits))
+
+# สุ่มเลือกหลายตัว (ไม่ซ้ำ)
+print("sample(3):", random.sample(fruits, 3))
+
+# สับ list (เปลี่ยน list เดิม)
+numbers = [1, 2, 3, 4, 5]
+random.shuffle(numbers)
+print("shuffle:", numbers)`} />
+
+### `datetime` — วันที่และเวลา
+
+<CodeRunner code={`from datetime import datetime, date, timedelta
+
+# วันที่ปัจจุบัน
+now = datetime.now()
+print(f"ตอนนี้: {now}")
+print(f"วันที่: {now.date()}")
+
+# สร้างวันที่เอง
+birthday = date(2000, 5, 15)
+print(f"วันเกิด: {birthday}")
+
+# คำนวณระยะห่าง
+today = date.today()
+age_days = (today - birthday).days
+print(f"อายุ: {age_days} วัน ({age_days // 365} ปี)")
+
+# บวก/ลบวัน
+next_week = today + timedelta(days=7)
+print(f"อีก 7 วัน: {next_week}")
+
+# จัดรูปแบบ
+print(f"format: {now.strftime('%d/%m/%Y %H:%M')}")`} />
+
+### `collections` — โครงสร้างข้อมูลพิเศษ
+
+<CodeRunner code={`from collections import Counter, defaultdict
+
+# Counter — นับจำนวนสมาชิก
+words = ["apple", "banana", "apple", "cherry", "banana", "apple"]
+count = Counter(words)
+print("Counter:", count)
+print("Most common:", count.most_common(2))
+
+# defaultdict — dict ที่มีค่าเริ่มต้น
+dd = defaultdict(list)
+dd["fruits"].append("apple")
+dd["fruits"].append("banana")
+dd["vegs"].append("carrot")
+print("defaultdict:", dict(dd))`} />
+
+### `json` — อ่าน/เขียน JSON
+
+<CodeRunner code={`import json
+
+# Python dict → JSON string
+data = {
+    "name": "สมชาย",
+    "age": 25,
+    "skills": ["Python", "SQL"]
+}
+json_str = json.dumps(data, ensure_ascii=False, indent=2)
+print("JSON string:")
+print(json_str)
+
+# JSON string → Python dict
+parsed = json.loads(json_str)
+print(f"\\nชื่อ: {parsed['name']}")
+print(f"อายุ: {parsed['age']}")
+print(f"skills: {parsed['skills']}")`} />
+
+## การติดตั้ง Package ด้วย `pip`
+
+`pip` คือเครื่องมือติดตั้ง package จาก PyPI (Python Package Index) — มี package กว่า 400,000+ ตัว
+
+```python
+# ติดตั้ง package
+pip install requests
+
+# ติดตั้งเวอร์ชันเฉพาะ
+pip install pandas==2.0.0
+
+# ดู package ที่ติดตั้งแล้ว
+pip list
+
+# ถอนการติดตั้ง
+pip uninstall requests
+```
+
+**หมายเหตุ:** บนเว็บนี้ใช้ Pyodide ซึ่งติดตั้ง package ผ่าน `micropip` แทน `pip`
+
+## สรุป
+
+- **import** — `import module`, `from module import name`, `import module as alias`
+- **`__name__`** — เช็คว่ารันโดยตรงหรือถูก import
+- **math** — `sqrt`, `pi`, `ceil`, `floor`, `factorial`
+- **random** — `randint`, `choice`, `shuffle`, `sample`
+- **datetime** — `now()`, `date()`, `timedelta`, `strftime`
+- **collections** — `Counter`, `defaultdict`
+- **json** — `dumps` (dict→JSON), `loads` (JSON→dict)
+- **pip** — ติดตั้ง package จาก PyPI
+
+บทต่อไป: **File I/O** — การอ่านและเขียนไฟล์

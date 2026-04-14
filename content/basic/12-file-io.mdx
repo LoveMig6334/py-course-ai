@@ -1,0 +1,179 @@
+---
+title: "การอ่านและเขียนไฟล์ (File I/O)"
+description: "เรียนรู้การเปิด อ่าน เขียนไฟล์ด้วย Python พร้อม with statement และ encoding สำหรับภาษาไทย"
+category: "basic"
+order: 12
+tags: ["file", "io", "open", "read", "write", "with"]
+---
+
+## File Modes — โหมดการเปิดไฟล์
+
+![File Open](/images/lessons/file-io/file-open.png)
+
+| โหมด | ความหมาย | ถ้าไฟล์ไม่มี |
+|---|---|---|
+| `"r"` | อ่านอย่างเดียว (default) | Error |
+| `"w"` | เขียนทับ (ลบเนื้อหาเดิม) | สร้างใหม่ |
+| `"a"` | เขียนต่อท้าย | สร้างใหม่ |
+| `"x"` | สร้างใหม่เท่านั้น | สร้างใหม่ (Error ถ้ามีอยู่แล้ว) |
+
+เพิ่ม `"b"` สำหรับ binary mode เช่น `"rb"`, `"wb"`
+
+## `with` Statement — วิธีที่ดีที่สุด
+
+ใช้ `with` เปิดไฟล์แล้วปิดอัตโนมัติ ไม่ต้องเรียก `.close()` เอง
+
+<CodeRunner code={`# เขียนไฟล์
+with open("test.txt", "w") as f:
+    f.write("สวัสดีครับ\\n")
+    f.write("นี่คือไฟล์ทดสอบ\\n")
+    f.write("บรรทัดที่ 3\\n")
+
+print("เขียนไฟล์เสร็จแล้ว!")
+
+# อ่านไฟล์
+with open("test.txt", "r") as f:
+    content = f.read()
+    print("เนื้อหาทั้งหมด:")
+    print(content)`} />
+
+## วิธีการอ่านไฟล์
+
+### `read()` — อ่านทั้งหมดเป็น string เดียว
+
+<CodeRunner code={`# สร้างไฟล์ตัวอย่าง
+with open("sample.txt", "w") as f:
+    f.write("Line 1: Hello\\n")
+    f.write("Line 2: World\\n")
+    f.write("Line 3: Python\\n")
+
+# read() อ่านทั้งหมด
+with open("sample.txt", "r") as f:
+    content = f.read()
+    print(type(content))
+    print(content)`} />
+
+### `readline()` — อ่านทีละบรรทัด
+
+<CodeRunner code={`with open("sample.txt", "r") as f:
+    line1 = f.readline()
+    line2 = f.readline()
+    print("บรรทัด 1:", line1.strip())
+    print("บรรทัด 2:", line2.strip())`} />
+
+### `readlines()` — อ่านทั้งหมดเป็น list
+
+<CodeRunner code={`with open("sample.txt", "r") as f:
+    lines = f.readlines()
+    print(type(lines))
+    print(lines)
+
+# ลูปแต่ละบรรทัด
+for i, line in enumerate(lines, 1):
+    print(f"{i}: {line.strip()}")`} />
+
+### วิธีที่ดีที่สุด — loop ไฟล์โดยตรง
+
+<CodeRunner code={`with open("sample.txt", "r") as f:
+    for line in f:
+        print(line.strip())`} />
+
+## วิธีการเขียนไฟล์
+
+![File Write](/images/lessons/file-io/file-write.png)
+
+### `"w"` — เขียนทับ
+
+<CodeRunner code={`with open("output.txt", "w") as f:
+    f.write("เขียนครั้งแรก\\n")
+
+with open("output.txt", "w") as f:
+    f.write("เขียนครั้งที่สอง (ทับอันเก่า)\\n")
+
+with open("output.txt", "r") as f:
+    print(f.read())  # เห็นแค่ครั้งที่สอง`} />
+
+### `"a"` — เขียนต่อท้าย
+
+<CodeRunner code={`with open("log.txt", "w") as f:
+    f.write("Log เริ่มต้น\\n")
+
+# append ต่อท้าย
+with open("log.txt", "a") as f:
+    f.write("Event 1: login\\n")
+    f.write("Event 2: view page\\n")
+
+with open("log.txt", "r") as f:
+    print(f.read())`} />
+
+### `writelines()` — เขียนจาก list
+
+<CodeRunner code={`lines = ["apple\\n", "banana\\n", "cherry\\n"]
+
+with open("fruits.txt", "w") as f:
+    f.writelines(lines)
+
+with open("fruits.txt", "r") as f:
+    print(f.read())`} />
+
+## Encoding — สำคัญสำหรับภาษาไทย
+
+เมื่อทำงานกับข้อความภาษาไทย ต้องระบุ `encoding="utf-8"` เสมอ
+
+<CodeRunner code={`# เขียนภาษาไทย
+with open("thai.txt", "w", encoding="utf-8") as f:
+    f.write("สวัสดีครับ\\n")
+    f.write("ภาษาไทยต้องใช้ UTF-8\\n")
+
+# อ่านภาษาไทย
+with open("thai.txt", "r", encoding="utf-8") as f:
+    print(f.read())`} />
+
+## ตัวอย่างจริง — อ่าน/เขียน CSV
+
+<CodeRunner code={`# สร้างไฟล์ CSV
+with open("students.csv", "w", encoding="utf-8") as f:
+    f.write("name,score,grade\\n")
+    f.write("สมชาย,85,A\\n")
+    f.write("สมหญิง,72,B\\n")
+    f.write("สมศักดิ์,91,A\\n")
+
+# อ่านและประมวลผล CSV
+with open("students.csv", "r", encoding="utf-8") as f:
+    header = f.readline().strip().split(",")
+    print(f"Columns: {header}")
+    print("---")
+    
+    total = 0
+    count = 0
+    for line in f:
+        name, score, grade = line.strip().split(",")
+        score = int(score)
+        total += score
+        count += 1
+        print(f"{name}: {score} (เกรด {grade})")
+    
+    print(f"---\\nเฉลี่ย: {total / count:.1f}")`} />
+
+## เช็คว่าไฟล์มีอยู่หรือไม่
+
+<CodeRunner code={`import os
+
+# เช็คว่าไฟล์มีอยู่
+print("students.csv:", os.path.exists("students.csv"))
+print("nonexist.txt:", os.path.exists("nonexist.txt"))
+
+# ดูขนาดไฟล์
+if os.path.exists("students.csv"):
+    size = os.path.getsize("students.csv")
+    print(f"ขนาด: {size} bytes")`} />
+
+## สรุป
+
+- ใช้ **`with open(...) as f:`** เสมอ — ปิดไฟล์อัตโนมัติ
+- **อ่าน**: `read()` ทั้งหมด, `readline()` ทีละบรรทัด, `readlines()` เป็น list, หรือ `for line in f`
+- **เขียน**: `"w"` ทับ, `"a"` ต่อท้าย, `write()` / `writelines()`
+- **ภาษาไทย** ต้องใส่ `encoding="utf-8"` เสมอ
+- ใช้ `os.path.exists()` เช็คว่าไฟล์มีอยู่
+
+บทต่อไป: **Error Handling** — จัดการข้อผิดพลาดด้วย try/except
