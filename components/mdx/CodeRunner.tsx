@@ -6,10 +6,10 @@ import { Loader2, Play } from "lucide-react";
 import { useState } from "react";
 
 interface CodeRunnerProps {
-  initialCode?: string;
+  code?: string;
 }
 
-export default function CodeRunner({ initialCode = "" }: CodeRunnerProps) {
+export default function CodeRunner({ code: initialCode = "" }: CodeRunnerProps) {
   const [code, setCode] = useState(initialCode);
   const [output, setOutput] = useState<string>("");
   const [error, setError] = useState<string | null>(null);
