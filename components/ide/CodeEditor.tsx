@@ -1,9 +1,12 @@
 "use client";
 
+import { acceptCompletion } from "@codemirror/autocomplete";
+import { indentMore } from "@codemirror/commands";
 import { python } from "@codemirror/lang-python";
+import { keymap } from "@codemirror/view";
 import { vscodeDark } from "@uiw/codemirror-theme-vscode";
 import CodeMirror from "@uiw/react-codemirror";
-import { useCallback } from "react";
+import { useCallback, useMemo } from "react";
 
 interface CodeEditorProps {
   value: string;
@@ -27,12 +30,24 @@ export default function CodeEditor({
     [onChange],
   );
 
+  // Tab: accept autocomplete if open, otherwise indent
+  const tabKeymap = useMemo(
+    () =>
+      keymap.of([
+        {
+          key: "Tab",
+          run: (view) => acceptCompletion(view) || indentMore(view),
+        },
+      ]),
+    [],
+  );
+
   return (
     <CodeMirror
       value={value}
       height={height}
       theme={vscodeDark}
-      extensions={[python()]}
+      extensions={[python(), tabKeymap]}
       onChange={handleChange}
       editable={editable}
       className={className}
@@ -59,7 +74,7 @@ export default function CodeEditor({
         searchKeymap: true,
         historyKeymap: true,
         foldKeymap: true,
-        completionKeymap: true,
+        completionKeymap: false,
         lintKeymap: true,
         tabSize: 4,
       }}
